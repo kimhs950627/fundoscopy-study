@@ -205,6 +205,14 @@ DME는 별도로 "없음 / 비중심와 / 중심와 침범"으로 평가. **중�
 
 *정상 안저(근시, 아시아 남성 23세). 근시성 호랑이무늬가 정상변이로 보임.*
 
+![정상 안저 고해상](../assets/images/normal_od_highres.jpg)
+
+*정상 안저(고해상 원본).*
+
+![경사시신경유두](../assets/images/tilted_disc.jpg)
+
+*경사시신경유두(tilted disc) — 정상 변이. CDR이 커 보여 녹내장으로 오인될 수 있음.*
+
 ### 4.2 당뇨망막병증 (DR / DME / PDR)
 
 ![비증식성 당뇨망막병증](../assets/images/dr_nonproliferative_eda03.jpg)
@@ -226,6 +234,14 @@ DME는 별도로 "없음 / 비중심와 / 중심와 침범"으로 평가. **중�
 ![PDR 신생혈관](../assets/images/dr_pdr_neovascular.jpg)
 
 *증식성 망막병증. 신생혈관 및 출혈.*
+
+![당뇨황반부종 (NEI)](../assets/images/dme_nei.jpg)
+
+*당뇨황반부종(DME, NEI). 황반부 부종/삼출.*
+
+![범망막광응고(PRP) 후](../assets/images/dr_laser_eda09.jpg)
+
+*범망막광응고(PRP) 치료 후 안저 — 레이저 반흔. 증식성 DR의 표준 치료 흔적.*
 
 ### 4.3 고혈압망막병증 (Hypertensive retinopathy)
 
@@ -250,6 +266,14 @@ DME는 별도로 "없음 / 비중심와 / 중심와 침범"으로 평가. **중�
 ![유두부종과 출혈](../assets/images/optic_disc_edema_hemorrhage.jpg)
 
 *시신경유두 부종과 주변 출혈.*
+
+![유두부종 IIH 우안](../assets/images/papilledema_iih_right.jpg)
+
+*특발성두개내고혈압(IIH) 우안 — 유두 융기, 경계흐림.*
+
+![유두부종 IIH 좌안](../assets/images/papilledema_iih_left.jpg)
+
+*특발성두개내고혈압(IIH) 좌안 — 양안성 유두부종.*
 
 ### 4.5 녹내장 (Glaucoma)
 
@@ -312,6 +336,28 @@ DME는 별도로 "없음 / 비중심와 / 중심와 침범"으로 평가. **중�
 ![망막모세포종](../assets/images/retinoblastoma.jpg)
 
 *망막모세포종(retinoblastoma). 소아 백색동공 감별.*
+
+### 4.10 황반원공 · RP 진행 · 맥락망막 반흔
+
+![황반원공 (양안 비교)](../assets/images/macular_hole_pair.jpg)
+
+*황반원공(macular hole) — 중심와 결손.*
+
+![황반원공 (우안)](../assets/images/macular_hole_od.jpg)
+
+*황반원공(우안). 중심 시력저하 + 변시증.*
+
+![RP 초기](../assets/images/rp_early.jpg)
+
+*망막색소변성증(RP) 초기.*
+
+![RP 말기](../assets/images/rp_end.jpg)
+
+*망막색소변성증(RP) 말기 — 골세포양 색소·혈관협착·시신경창백.*
+
+![맥락망막 반흔](../assets/images/toxoplasma_scar.png)
+
+*선천성 톡소플라스마 맥락망막 반흔(chorioretinal scar).*
 
 ---
 
@@ -379,6 +425,18 @@ CC 라이선스 이미지는 저작자 표시가 필수다. 전체 메타데이�
 | hypertensive_retinopathy.jpg | CC BY 3.0 | Frank Wood |
 | papilledema.jpg | CC BY 3.0 | Jonathan Trobe, M.D. (Univ. of Michigan Kellogg Eye Center) |
 | hollenhorst_plaque.jpg | CC BY 4.0 | Yong Meng Hsien et al. |
+| dme_nei.jpg | Public Domain | National Eye Institute (NEI/NIH) |
+| dr_laser_eda09.jpg | Public Domain | Wikimedia Commons |
+| normal_od_highres.jpg | CC BY-SA 4.0 | Wikimedia Commons |
+| tilted_disc.jpg | CC BY-SA 4.0 | Wikimedia Commons |
+| macular_hole_pair.jpg | CC BY-SA 4.0 | Wikimedia Commons |
+| macular_hole_od.jpg | CC BY-SA 3.0 | Wikimedia Commons |
+| crvo_ecig.png | CC BY 4.0 | Wikimedia Commons (2022 case report) |
+| papilledema_iih_right.jpg | CC BY 4.0 | Wikimedia Commons |
+| papilledema_iih_left.jpg | CC BY 4.0 | Wikimedia Commons |
+| rp_early.jpg | CC BY 2.0 | Christian Hamel |
+| rp_end.jpg | CC BY 2.0 | Christian Hamel |
+| toxoplasma_scar.png | CC BY 2.0 | Wikimedia Commons |
 
 > 라이선스 상세와 정확한 저작자 표기는 `assets/images/CREDITS.json`의 `license`, `artist`, `source` 필드를 확인할 것. 배포/발표 시 각 이미지 저작자 표시 필요.
 

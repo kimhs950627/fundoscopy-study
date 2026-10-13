@@ -42,6 +42,18 @@ MANIFEST = {
     "retinoblastoma.jpg": ("File:Fundus retinoblastoma.jpg", "retinoblastoma"),
     "retinoblastoma_scan.jpg": ("File:Rb Retina Scan.jpg", "retinoblastoma"),
     "cscr.jpg": ("File:Central serous chorioretinopathy.jpg", "cscr"),
+    "normal_od_highres.jpg": ("File:Fundus photo Retina OD.jpg", "normal"),
+    "tilted_disc.jpg": ("File:Tilted Disc Syndrome.jpg", "tilted_disc"),
+    "dme_nei.jpg": ("File:Diabetic macular edema-NEI.jpg", "dme"),
+    "dr_laser_eda09.jpg": ("File:Fundus photo showing scatter laser surgery for diabetic retinopathy EDA09.JPG", "dr_laser"),
+    "crvo_ecig.png": ("File:A 2022 case report of central retinal vein occlusion was likely caused by a four-year history of e-cigarette usage.png", "crvo"),
+    "papilledema_iih_right.jpg": ("File:Retina photo of a right eye, patient with Severe Idiopathic Cranial Hypertension (aka Psuedotumor Cerebri).jpg", "papilledema"),
+    "papilledema_iih_left.jpg": ("File:Retina photo of a left eye, patient with severe Idiopathic Cranial Hypertension (aka Psuedotumor Cerebri).jpg", "papilledema"),
+    "macular_hole_od.jpg": ("File:Macular hole on the right eye.jpg", "macular_hole"),
+    "macular_hole_pair.jpg": ("File:Macular Hole side x side.jpg", "macular_hole"),
+    "rp_early.jpg": ("File:Fundus of patient with retinitis pigmentosa, early stage.jpg", "rp"),
+    "rp_end.jpg": ("File:Fundus of patient with retinitis pigmentosa, end stage.jpg", "rp"),
+    "toxoplasma_scar.png": ("File:PMID20029144 01 congenital toxoplasmosis - chorioretinal scar.png", "chorioretinal_scar"),
 }
 
 
@@ -59,7 +71,7 @@ def fetch_titles(titles):
     for i in range(0, len(titles), 20):
         chunk = titles[i:i + 20]
         d = api({"titles": "|".join(chunk), "prop": "imageinfo",
-                 "iiprop": "url|extmetadata|size", "iiurlwidth": "1600"})
+                 "iiprop": "url|extmetadata|size", "iiurlwidth": "1100"})
         for page in d["query"]["pages"].values():
             out[page["title"]] = page.get("imageinfo", [{}])[0]
     return out
