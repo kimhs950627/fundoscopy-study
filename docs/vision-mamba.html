@@ -95,6 +95,13 @@
   footer{color:var(--muted);text-align:center;padding:40px 20px 70px;font-size:14px;}
   .legend{font-size:13.5px;color:var(--muted)}
 </style>
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)']], displayMath: [['$$','$$']] },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
 <header id="top">
@@ -235,6 +242,59 @@ for delta in (0.5, 2.0):
   </div>
   <pre><code>재귀:  h_t = Ā h_{t-1} + B̄ x_t
 전개:  y = x * K ,  K = (C B̄, C Ā B̄, C Ā² B̄, ...)   # 고정 커널이면 병렬!</code></pre>
+</section>
+
+<section class="reveal" id="m1">
+  <h2><span class="num"></span>수식 ① — 이산화: Δ는 어디서 오나</h2>
+  <p>연속 방정식에서 출발합니다.</p>
+  $$ h'(t) = A\,h(t) + B\,x(t), \qquad y(t) = C\,h(t) + D\,x(t) $$
+  <p>구간 전체에서 입력이 일정하다고 보는 <b>영차홀드(ZOH)</b> 해는 정확히</p>
+  $$ \bar A = e^{\Delta A}, \qquad \bar B = \Big(\int_{0}^{\Delta} e^{\tau A}\,d\tau\Big) B = A^{-1}\big(e^{\Delta A} - I\big) B $$
+  <p>A가 대각(스칼라)이면 적분도 스칼라라 간단합니다. Mamba는 행렬 역산을 피하려 1차 근사 <code>B̄ ≈ ΔB</code> 를 씁니다.</p>
+  <table>
+    <tr><th>Δ</th><th>정확한 B̄ = (1 − e^(−Δ))/1</th><th>근사 B̄ = ΔB</th></tr>
+    <tr><td>0.5</td><td>0.3935</td><td>0.5000</td></tr>
+    <tr><td>1.0</td><td>0.6321</td><td>1.0000</td></tr>
+    <tr><td>2.0</td><td>0.8647</td><td>2.0000</td></tr>
+  </table>
+  <div class="callout">Mamba가 <code>A = −exp(A_log)</code> 로 두는 이유: A가 항상 음수 → <code>Ā = e^(ΔA) ∈ (0,1)</code> → 재귀가 <b>수축(contractive)</b> → 기울기 폭주·소실 없이 안정.</div>
+</section>
+
+<section class="reveal" id="m2">
+  <h2><span class="num"></span>수식 ② — 재귀에서 컨볼루션으로</h2>
+  <p>재귀를 차례로 풀어 씁니다 (<code>h₀ = 0</code>).</p>
+  $$ h_t = \bar A h_{t-1} + \bar B x_t $$
+  $$ h_1 = \bar B x_1,\qquad h_2 = \bar A\bar B x_1 + \bar B x_2,\qquad h_3 = \bar A^2\bar B x_1 + \bar A\bar B x_2 + \bar B x_3 $$
+  <p>일반형과 출력을 정리하면</p>
+  $$ h_t = \sum_{s=1}^{t} \bar A^{\,t-s}\,\bar B\,x_s, \qquad y_t = C h_t = \sum_{k=0}^{t-1}\underbrace{\big(C\bar A^{k}\bar B\big)}_{K_k}\,x_{t-k} = (K * x)_t $$
+  <p>즉 <b>고정 커널 K</b> 와의 인과적 합성곱입니다. <code>A=−1, B=C=1, Ā=0.6065, B̄=0.5, x=[1,0,2]</code> 로 검산:</p>
+  <table>
+    <tr><th>커널</th><th>값</th><th>검산 y_t = Σ K_k x_(t−k)</th><th>결과</th></tr>
+    <tr><td>K₀ = C B̄</td><td>0.5000</td><td>y₁ = K₀x₁ = 0.5×1</td><td>0.5000</td></tr>
+    <tr><td>K₁ = C Ā B̄</td><td>0.3033</td><td>y₂ = K₀x₂ + K₁x₁ = 0 + 0.3033</td><td>0.3033</td></tr>
+    <tr><td>K₂ = C Ā² B̄</td><td>0.1839</td><td>y₃ = K₀x₃ + K₁x₂ + K₂x₁ = 1.0 + 0 + 0.1839</td><td>1.1839</td></tr>
+  </table>
+  <p class="legend">앞 절의 순차 계산 결과(0.5 / 0.3033 / 1.1839)와 정확히 일치합니다.</p>
+  <div class="callout warn">이 커널은 <b>입력과 무관</b>(LTI)해서 한 번 계산하면 재사용 가능(고속 합성곱). 대신 “입력에 따라 선택”은 불가능 — 그래서 다음 절(선택성)이 필요합니다.</div>
+</section>
+
+<section class="reveal" id="m3">
+  <h2><span class="num"></span>수식 ③ — 병렬 스캔(associative scan)</h2>
+  <p>Δ,B,C가 입력 의존이면 커널이 매번 달라져 합성곱을 못 씁니다. 하지만 순차 재귀 자체를 <b>병렬화</b>할 수 있습니다. 선형 재귀를 아핀 형태로 봅니다.</p>
+  $$ h_t = a_t\,h_{t-1} + b_t, \qquad a_t = \bar A_t,\quad b_t = \bar B_t\,x_t $$
+  <p>쌍 <code>(a, b)</code> 를 함수 <code>z ↦ a·z + b</code> 로 보면 합성은</p>
+  $$ (a_2,b_2)\circ(a_1,b_1) = \big(a_2 a_1,\; a_2 b_1 + b_2\big) $$
+  <p>이 연산은 <b>결합법칙</b>이 성립합니다(교환은 아님). 따라서 앞에서부터의 합성(prefix)을 병렬 스캔으로 계산할 수 있습니다.</p>
+  $$ (A_t, B_t) = (a_t,b_t)\circ\cdots\circ(a_1,b_1), \qquad h_t = B_t $$
+  <p>수치 예: <code>a = [0.5, 0.5, 0.5]</code>, <code>b = [1, 0, 2]</code></p>
+  <table>
+    <tr><th>t</th><th>prefix (A_t, B_t)</th><th>h_t = B_t</th></tr>
+    <tr><td>1</td><td>(0.5000, 1.0000)</td><td>1.0000</td></tr>
+    <tr><td>2</td><td>(0.2500, 0.5000)</td><td>0.5000</td></tr>
+    <tr><td>3</td><td>(0.1250, 2.2500)</td><td>2.2500</td></tr>
+  </table>
+  <p class="legend">순차 재귀(h₂=0.5·1+0=0.5, h₃=0.5·0.5+2=2.25)와 일치.</p>
+  <div class="callout">결합법칙 덕분에 O(L) 작업을 <b>O(log L) 깊이</b>로 병렬화할 수 있습니다(Blelloch 스캔). GPU/다중코어에 유리하고, CPU에서 <code>tf.scan</code> 이 이 원리를 사용합니다.</div>
 </section>
 
 <section class="reveal" id="s5">
