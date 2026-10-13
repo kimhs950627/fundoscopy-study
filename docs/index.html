@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fundoscopy-study</title>
+<style>
+  :root{--bg:#0b1220;--card:#16233a;--line:#26374f;--ink:#e8eef7;--muted:#93a4bd;--teal:#2fd4d4}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(1200px 600px at 50% -10%,#123, #0b1220 60%);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,"Segoe UI",Roboto,sans-serif;padding:24px;}
+  .wrap{max-width:760px;width:100%}
+  h1{font-size:34px;margin:0 0 8px}
+  .sub{color:var(--muted);margin-bottom:26px}
+  a.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:18px 20px;margin:12px 0;transition:transform .15s,border-color .15s,box-shadow .15s}
+  a.card:hover{transform:translateY(-2px);border-color:var(--teal);box-shadow:0 8px 30px rgba(47,212,212,.15)}
+  .card h2{margin:0 0 4px;font-size:20px;color:var(--teal)}
+  .card p{margin:0;color:var(--muted);font-size:15px}
+  .tag{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--muted);margin-left:8px}
+  footer{color:var(--muted);font-size:13px;margin-top:24px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>fundoscopy-study</h1>
+    <div class="sub">안저 AI 앱 · 의사 학습자료 프로젝트</div>
+
+    <a class="card" href="vision-mamba.html">
+      <h2>Vision Mamba 애니메이션 학습자료 <span class="tag">추천</span></h2>
+      <p>ViT를 아는 사람을 위한 SSM·Vision Mamba 시각 설명 (슬라이더·버튼 인터랙션)</p>
+    </a>
+
+    <a class="card" href="https://github.com/kimhs950627/fundoscopy-study/blob/master/docs/fundus-common-findings-and-red-flags.md">
+      <h2>안저 흔한 소견 & Red Flag</h2>
+      <p>건강검진 안저판독 참조문서 (GitHub에서 렌더링)</p>
+    </a>
+
+    <a class="card" href="https://github.com/kimhs950627/fundoscopy-study/blob/master/docs/datasets.md">
+      <h2>공개 데이터셋 카탈로그</h2>
+      <p>지도학습용 안저 데이터셋 + CPU 실험 계획 (GitHub에서 렌더링)</p>
+    </a>
+
+    <a class="card" href="https://github.com/kimhs950627/fundoscopy-study">
+      <h2>GitHub 저장소</h2>
+      <p>전체 소스 · 슬라이드 PDF · Keras/TF 계획 · 이미지 크레딧</p>
+    </a>
+
+    <footer>
+      의료진 학습·개발 참고자료입니다. 이미지 출처는 Wikimedia Commons(PD/CC-BY/CC-BY-SA), <code>assets/images/CREDITS.json</code> 참조.
+    </footer>
+  </div>
+</body>
+</html>
