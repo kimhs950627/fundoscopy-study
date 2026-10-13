@@ -15,3 +15,6 @@ app/notebooks/.ipynb_checkpoints/
 uploads/
 tmp/
 .DS_Store
+
+# html screenshots
+docs/vm_*.png

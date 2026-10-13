@@ -25,6 +25,14 @@
   section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 26px 30px;margin:26px 0;}
   h2{font-size:26px;margin:0 0 6px;color:var(--teal);}
   .num{display:inline-block;background:var(--teal2);color:#fff;border-radius:8px;padding:2px 10px;font-size:15px;margin-right:10px;vertical-align:middle;}
+  main{counter-reset:sec 0}
+  section{counter-increment:sec}
+  .num::before{content:counter(sec)}
+  pre .c{color:#6fb3a8}
+  pre .k{color:#7fb2ff}
+  pre .n{color:#ffb74d}
+  .out{background:#08101d;border:1px dashed #2f6a70;border-radius:10px;padding:10px 14px;font-family:ui-monospace,monospace;font-size:14px;color:#bff0f0;white-space:pre;overflow:auto}
+  .numtag{font-family:ui-monospace,monospace;color:var(--amber)}
   h3{font-size:19px;margin:18px 0 8px;}
   p{margin:8px 0;}
   .muted{color:var(--muted);}
@@ -102,13 +110,13 @@
 <main>
 
 <section class="reveal">
-  <h2><span class="num">0</span>한 줄 요약</h2>
+  <h2><span class="num"></span>한 줄 요약</h2>
   <p class="muted">Attention이 “모든 토큰을 매번 전부 조회”라면, Vision Mamba는 <b>입력이 조절하는 요약 메모리(상태)를 양방향으로 순차 갱신</b>해서 O(L)로 같은 전역 문맥을 얻습니다.</p>
   <div class="callout">스크롤하면 각 개념이 애니메이션으로 나타납니다. <span class="kbd">슬라이더</span>와 <span class="kbd">버튼</span>으로 직접 조작해 보세요.</div>
 </section>
 
 <section class="reveal" id="s1">
-  <h2><span class="num">1</span>ViT 복습 — 왜 바꾸려는가</h2>
+  <h2><span class="num"></span>ViT 복습 — 왜 바꾸려는가</h2>
   <p>ViT는 이미지를 패치로 쪼개 토큰 <code>x₁…x_L</code> 로 만들고, attention으로 <b>모든 토큰 쌍</b>을 비교합니다. L이 커지면 연산·메모리가 <b>L²</b>로 폭증합니다.</p>
   <pre><code>Attention(Q,K,V) = softmax(QKᵀ/√d) V     # 모든 쌍 비교
 복잡도 = O(L² · D)</code></pre>
@@ -120,7 +128,7 @@
 </section>
 
 <section class="reveal" id="s2">
-  <h2><span class="num">2</span>출발점 — 상태공간모델(SSM)</h2>
+  <h2><span class="num"></span>출발점 — 상태공간모델(SSM)</h2>
   <pre><code>h'(t) = A · h(t) + B · x(t)     ← 상태(메모리) 갱신
 y(t)  = C · h(t) + D · x(t)     ← 상태에서 출력 읽기</code></pre>
   <div class="grid2">
@@ -145,7 +153,7 @@ y(t)  = C · h(t) + D · x(t)     ← 상태에서 출력 읽기</code></pre>
 </section>
 
 <section class="reveal" id="s3">
-  <h2><span class="num">3</span>이산화와 Δ — 얼마나 기억할까</h2>
+  <h2><span class="num"></span>이산화와 Δ — 얼마나 기억할까</h2>
   <pre><code>Ā = exp(Δ · A)                 # 상태가 남는 정도
 B̄ = Δ · B                      # 입력을 받는 정도
 h_t = Ā · h_{t-1} + B̄ · x_t
@@ -163,8 +171,59 @@ y_t = C · h_t</code></pre>
   </div>
 </section>
 
+<section class="reveal" id="s3b">
+  <h2><span class="num"></span>숫자로 따라가기 — Δ가 만드는 차이</h2>
+  <p>가장 단순한 설정: 상태 1개(N=1), 채널 1개(D=1), <code>A = −1, B = C = 1</code>, 입력 <code>x = [1, 0, 2]</code>.</p>
+  <div class="grid2">
+    <div class="panel">
+      <h3 style="margin-top:0">Δ = 0.5 (완만)</h3>
+      <pre><code>Ā = e^(0.5 × −1) = 0.6065
+B̄ = 0.5 × 1     = 0.5</code></pre>
+      <table>
+        <tr><th>t</th><th>x_t</th><th>h_t</th></tr>
+        <tr><td>1</td><td>1</td><td>0.5000</td></tr>
+        <tr><td>2</td><td>0</td><td>0.3033</td></tr>
+        <tr><td>3</td><td>2</td><td>1.1839</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">Δ = 2.0 (급함)</h3>
+      <pre><code>Ā = e^(2.0 × −1) = 0.1353
+B̄ = 2.0 × 1     = 2.0</code></pre>
+      <table>
+        <tr><th>t</th><th>x_t</th><th>h_t</th></tr>
+        <tr><td>1</td><td>1</td><td>2.0000</td></tr>
+        <tr><td>2</td><td>0</td><td>0.2707</td></tr>
+        <tr><td>3</td><td>2</td><td>4.0366</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="callout">같은 입력인데 Δ=2일 때 t3의 상태가 <b>4.04 vs 1.18</b> (약 3.4배). Δ가 크면 <b>현재 입력을 강하게 반영하고 과거는 빨리 잊고</b>, Δ가 작으면 완만하게 누적합니다.</div>
+  <h3>직접 돌려보기 (위 표가 그대로 나옵니다)</h3>
+  <pre><code>import numpy as np
+A, B, C = -1.0, 1.0, 1.0
+x = [1.0, 0.0, 2.0]
+
+for delta in (0.5, 2.0):
+    Abar = np.exp(delta * A)      # Ā
+    Bbar = delta * B              # B̄
+    h = 0.0
+    print(f"Δ={delta}: Ā={Abar:.4f}  B̄={Bbar}")
+    for t, xt in enumerate(x, 1):
+        h = Abar * h + Bbar * xt  # h_t = Ā·h_{t-1} + B̄·x_t
+        print(f"  t{t}: x={xt}  h={h:.4f}  y={h:.4f}")</code></pre>
+  <div class="out">Δ=0.5: Ā=0.6065  B̄=0.5
+  t1: x=1.0  h=0.5000  y=0.5000
+  t2: x=0.0  h=0.3033  y=0.3033
+  t3: x=2.0  h=1.1839  y=1.1839
+Δ=2.0: Ā=0.1353  B̄=2.0
+  t1: x=1.0  h=2.0000  y=2.0000
+  t2: x=0.0  h=0.2707  y=0.2707
+  t3: x=2.0  h=4.0366  y=4.0366</div>
+</section>
+
 <section class="reveal" id="s4">
-  <h2><span class="num">4</span>재귀 vs 컨볼루션 — 같은 식, 두 가지 계산</h2>
+  <h2><span class="num"></span>재귀 vs 컨볼루션 — 같은 식, 두 가지 계산</h2>
   <p>SSM은 같은 수식을 두 방식으로 계산합니다. 토글을 눌러 비교하세요.</p>
   <div class="ctrl">
     <button id="btnRec">추론: 재귀(순차)</button>
@@ -179,7 +238,7 @@ y_t = C · h_t</code></pre>
 </section>
 
 <section class="reveal" id="s5">
-  <h2><span class="num">5</span>Mamba의 핵심 — 선택성(Selective)</h2>
+  <h2><span class="num"></span>Mamba의 핵심 — 선택성(Selective)</h2>
   <p>위의 <code>Ā,B̄,C</code>가 상수면 병렬화되지만 “입력에 따라 선택”을 못 합니다. Mamba는 이들을 <b>입력 x_t마다 다르게</b> 만듭니다.</p>
   <pre><code>Δ_t = softplus(Linear_Δ(x_t))
 B_t = Linear_B(x_t)
@@ -199,8 +258,71 @@ C_t = Linear_C(x_t)          # 입력이 “무엇을 기억/무시할지” 결
   </div>
 </section>
 
+<section class="reveal" id="s5b">
+  <h2><span class="num"></span>코드로 보기 — selective scan</h2>
+  <p>Mamba의 실제 하이퍼파라미터 (논문 관례): <code>d_state = 16</code>, <code>d_conv = 4</code>, <code>expand = 2</code>, <code>dt_rank = ceil(d_model / 16)</code>.</p>
+  <table>
+    <tr><th>d_model</th><th>d_inner (expand=2)</th><th>dt_rank</th><th>d_state</th><th>d_conv</th></tr>
+    <tr><td>128</td><td>256</td><td>8</td><td>16</td><td>4</td></tr>
+    <tr><td>256</td><td>512</td><td>16</td><td>16</td><td>4</td></tr>
+    <tr><td>768</td><td>1536</td><td>48</td><td>16</td><td>4</td></tr>
+  </table>
+  <div class="grid2" style="margin-top:14px">
+    <div class="panel">
+      <h3 style="margin-top:0">PyTorch — 정답 오라클(순차 루프)</h3>
+      <pre><code>import torch
+import torch.nn.functional as F
+
+def selective_scan(u, delta, A, B, C, D=None):
+    # u, delta: (b, d, l)   A: (d, n)   B, C: (b, n, l)
+    b, d, l = u.shape
+    n = A.shape[1]
+    delta = F.softplus(delta)                 # Δ > 0
+    dA   = torch.exp(delta[..., None] * A)    # (b,d,l,n) = exp(ΔA)
+    dB_u = (delta[..., None]
+            * B.transpose(1, 2)[:, None]      # (b,1,l,n)
+            * u[..., None])                   # (b,d,l,1)
+    h = u.new_zeros((b, d, n))
+    ys = []
+    for t in range(l):
+        h = dA[:, :, t] * h + dB_u[:, :, t]   # h_t = Ā h_{t-1} + B̄ x_t
+        ys.append(torch.einsum("bdn,bn->bd", h, C[:, :, t]))
+    y = torch.stack(ys, dim=2)
+    if D is not None:
+        y = y + u * D.view(1, -1, 1)          # skip
+    return y</code></pre>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">TensorFlow — tf.scan으로 병렬화</h3>
+      <pre><code>import tensorflow as tf
+
+def selective_scan_tf(u, delta, A, B, C):
+    # u, delta: (b, l, d)   A: (d, n)   B, C: (b, l, n)
+    delta = tf.nn.softplus(delta)
+    dA  = tf.exp(delta[..., None] * A)                 # (b,l,d,n)
+    dBu = delta[..., None] * B[:, :, None, :] * u[..., None]
+
+    def step(h, xs):
+        dA_t, dBu_t, C_t = xs
+        h = dA_t * h + dBu_t
+        y = tf.reduce_sum(h * C_t[:, None, :], axis=-1)
+        return h, y
+
+    h0 = tf.zeros([tf.shape(u)[0], tf.shape(u)[2], A.shape[1]])
+    _, ys = tf.scan(
+        step,
+        (tf.transpose(dA,  [1, 0, 2, 3]),
+         tf.transpose(dBu, [1, 0, 2, 3]),
+         tf.transpose(C,   [1, 0, 2])),
+        initializer=h0)
+    return tf.transpose(ys, [1, 0, 2])</code></pre>
+    </div>
+  </div>
+  <p class="legend">왼쪽 순차 루프는 “정답” 기준, 오른쪽 <code>tf.scan</code>은 같은 계산을 병렬화. 둘의 출력이 수치적으로 일치하는지가 구현의 첫 관문(허용오차 &lt; 1e-5).</p>
+</section>
+
 <section class="reveal" id="s6">
-  <h2><span class="num">6</span>Vision Mamba 블록 — ViT 블록과 1:1 대응</h2>
+  <h2><span class="num"></span>Vision Mamba 블록 — ViT 블록과 1:1 대응</h2>
   <p>ViT의 <b>attention 자리에 양방향 SSM</b>, MLP 자리에 <b>gating</b>이 들어갑니다. 토큰이 파이프라인을 지나갑니다.</p>
   <div class="panel">
     <div class="pipe" id="pipe">
@@ -221,7 +343,7 @@ C_t = Linear_C(x_t)          # 입력이 “무엇을 기억/무시할지” 결
 </section>
 
 <section class="reveal" id="s7">
-  <h2><span class="num">7</span>양방향 스캔 — 이미지는 순서가 없다</h2>
+  <h2><span class="num"></span>양방향 스캔 — 이미지는 순서가 없다</h2>
   <p>NLP와 달리 이미지는 고정된 순서가 없어서, 한 방향으로만 스캔하면 결과가 패치 순서에 민감합니다. <b>정방향 + 역방향</b>을 합칩니다.</p>
   <div class="panel bidir">
     <div class="legend">정방향 SSM →</div>
@@ -233,7 +355,7 @@ C_t = Linear_C(x_t)          # 입력이 “무엇을 기억/무시할지” 결
 </section>
 
 <section class="reveal" id="s8">
-  <h2><span class="num">8</span>복잡도 — 왜 빠른가</h2>
+  <h2><span class="num"></span>복잡도 — 왜 빠른가</h2>
   <div class="panel">
     <div class="legend" style="margin-bottom:6px">Attention (L²)</div>
     <div class="bar quad" id="qbar"></div>
@@ -243,8 +365,25 @@ C_t = Linear_C(x_t)          # 입력이 “무엇을 기억/무시할지” 결
   </div>
 </section>
 
+<section class="reveal" id="s8b">
+  <h2><span class="num"></span>비용 비교 — 실제 숫자</h2>
+  <p>d_model = 768 기준, 토큰 L개일 때 <b>대략적</b> 연산량(MAC 기준).</p>
+  <table>
+    <tr><th>L</th><th>해상도 예 (ViT 패치)</th><th>Attention ≈ 2L²D</th><th>SSM scan ≈ 3·L·d_inner·N</th><th>배수</th></tr>
+    <tr><td>197</td><td>224² → 16² 패치 + 1</td><td>59.6M</td><td>14.5M</td><td>4.1×</td></tr>
+    <tr><td>784</td><td>448² → 28² 패치</td><td>944.1M</td><td>57.8M</td><td>16.3×</td></tr>
+  </table>
+  <table style="margin-top:12px">
+    <tr><th>L</th><th>Attention 행렬 원소 수 (L²)</th><th>SSM 상태 크기 (L·N)</th></tr>
+    <tr><td>197</td><td>38,809</td><td>3,152</td></tr>
+    <tr><td>784</td><td>614,656</td><td>12,544</td></tr>
+  </table>
+  <div class="callout">L이 2배 → attention은 4배, SSM은 2배. 고해상도 안저사진(패치 수가 큰 경우)일수록 격차가 급격히 벌어집니다.</div>
+  <p class="legend">값은 스케일 감을 위한 근사이며, 실제 측정은 커널·구현에 따라 다릅니다.</p>
+</section>
+
 <section class="reveal" id="s9">
-  <h2><span class="num">9</span>정리 — ViT ↔ Vision Mamba</h2>
+  <h2><span class="num"></span>정리 — ViT ↔ Vision Mamba</h2>
   <table>
     <tr><th></th><th>ViT</th><th>Vision Mamba</th></tr>
     <tr><td>패치 임베딩</td><td>있음</td><td>동일</td></tr>
@@ -261,7 +400,7 @@ C_t = Linear_C(x_t)          # 입력이 “무엇을 기억/무시할지” 결
 </section>
 
 <section class="reveal" id="s10">
-  <h2><span class="num">10</span>우리 프로젝트(안저 AI)와 연결</h2>
+  <h2><span class="num"></span>우리 프로젝트(안저 AI)와 연결</h2>
   <ul>
     <li>SSM은 <b>선형</b>이고 커널 의존이 없어 <b>순수 TF/NumPy 연산으로 CPU 구현</b> 가능 → TFLite 배포에 유리.</li>
     <li>안저/의료영상은 최근 <b>CNN + Mamba 하이브리드</b>가 강세: MedMamba, StageMamba, LEMUR(RETFound→VMamba 증류).</li>
@@ -386,6 +525,15 @@ C_t = Linear_C(x_t)          # 입력이 “무엇을 기억/무시할지” 결
     document.getElementById('lbar').style.width='18%';
     document.getElementById('lbar').textContent='L  (100)';
   });
+
+  // ?only=N : show a single section (for screenshots)
+  const only=new URLSearchParams(location.search).get('only');
+  if(only){
+    const secs=[...document.querySelectorAll('main > section')];
+    const k=Number(only)-1;
+    secs.forEach((s,i)=>{ if(i!==k) s.remove(); });
+    if(secs[k]){ secs[k].classList.add('in'); document.body.style.background='#0b1220'; }
+  }
 })();
 </script>
 </body>
