@@ -3,50 +3,51 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Mamba &amp; Vision Mamba 스텝바이스텝 워크북</title>
+<title>Mamba &amp; Vision Mamba — 쉬운 스텝바이스텝</title>
 <style>
   :root{ --ink:#12181f; --muted:#5b6b82; --line:#dbe4ee; --teal:#0e7c86; --teal-d:#0a5b62;
-         --amber:#b26a00; --green:#1b7f4b; --bg:#f5f8fb; }
+         --amber:#b26a00; --green:#1b7f4b; --bg:#f5f8fb; --violet:#6a1b9a; }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:#e9edf2;color:var(--ink);
     font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo",system-ui,"Segoe UI",Roboto,sans-serif;
-    line-height:1.7;font-size:11.4pt;}
+    line-height:1.75;font-size:11.5pt;}
   .doc{max-width:820px;margin:0 auto;background:#fff;}
   main{padding:26px 34px 60px;}
   h1{font-size:26pt;line-height:1.25;margin:0 0 8px;}
   h2{font-size:17pt;margin:30px 0 8px;color:var(--teal-d);padding-bottom:6px;border-bottom:2px solid var(--line);}
   h3{font-size:13.5pt;margin:18px 0 6px;}
-  p{margin:8px 0;}
-  ul,ol{margin:8px 0 8px 0;padding-left:22px;}
-  li{margin:4px 0;}
+  p{margin:9px 0;}
+  ul,ol{margin:8px 0;padding-left:22px;} li{margin:5px 0;}
   small,.muted{color:var(--muted);}
   code{background:#eef3f8;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:10.5pt;}
-  pre{background:#0d1728;color:#d7e6f5;border-radius:10px;padding:12px 14px;overflow:auto;font-size:10pt;line-height:1.45;}
-  pre code{background:none;border:none;color:#d7e6f5;padding:0;font-size:10pt;}
+  b.hl{color:var(--teal-d);}
   table{width:100%;border-collapse:collapse;font-size:10.5pt;margin:10px 0;}
   th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top;}
-  th{background:#eef3f8;}
-  tr:nth-child(even) td{background:#fafcfe;}
+  th{background:#eef3f8;} tr:nth-child(even) td{background:#fafcfe;}
   .cover{background:linear-gradient(135deg,#0a2a33,#0e7c86 60%,#14a3ad);color:#fff;padding:56px 34px 46px;}
-  .cover h1{color:#fff;font-size:30pt;} .cover p{color:#dff3f5;font-size:12.5pt;}
+  .cover h1{color:#fff;font-size:29pt;} .cover p{color:#dff3f5;font-size:12.5pt;}
   .cover .tag{color:#a8e6ea;letter-spacing:2px;font-size:10.5pt;text-transform:uppercase;font-weight:700;}
   .step{border-left:5px solid var(--teal);background:var(--bg);border-radius:0 10px 10px 0;padding:10px 16px;margin:14px 0;}
   .box{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 15px;margin:12px 0;}
   .key{background:#e7f4f5;border:1px solid #bfe0e3;border-radius:10px;padding:12px 15px;margin:12px 0;}
   .warn{background:#fff6e8;border:1px solid #f0dcb0;border-radius:10px;padding:12px 15px;margin:12px 0;}
+  .analogy{background:#f3eefb;border:1px solid #ddd0f0;border-left:5px solid var(--violet);border-radius:0 10px 10px 0;padding:12px 15px;margin:12px 0;}
+  .analogy .lbl{display:inline-block;background:var(--violet);color:#fff;font-weight:700;font-size:9.5pt;border-radius:6px;padding:1px 8px;margin-right:8px;}
   .ex{background:#fff8ec;border:1px solid #eedcb4;border-left:5px solid var(--amber);border-radius:0 10px 10px 0;padding:12px 15px;margin:14px 0;}
-  .ex .lbl{display:inline-block;background:var(--amber);color:#fff;font-weight:700;font-size:9.5pt;border-radius:6px;padding:1px 8px;margin-right:8px;}
+  .ex .lbl,.ans .lbl{display:inline-block;color:#fff;font-weight:700;font-size:9.5pt;border-radius:6px;padding:1px 8px;margin-right:8px;}
+  .ex .lbl{background:var(--amber);}
   .ans{border-left:5px solid var(--green);background:#f0f8f2;border-radius:0 10px 10px 0;padding:10px 15px;margin:14px 0;}
-  .ans .lbl{display:inline-block;background:var(--green);color:#fff;font-weight:700;font-size:9.5pt;border-radius:6px;padding:1px 8px;margin-right:8px;}
-  .roadmap td:first-child{white-space:nowrap;font-weight:700;color:var(--teal-d);}
+  .ans .lbl{background:var(--green);}
+  .fig{text-align:center;margin:14px 0;}
+  .fig svg{max-width:100%;height:auto;}
+  .figcap{font-size:10pt;color:var(--muted);margin-top:4px;}
+  .glossary td:first-child{white-space:nowrap;font-weight:700;color:var(--teal-d);}
   hr{border:none;border-top:1px solid var(--line);margin:26px 0;}
   @media print{
-    html,body{background:#fff;}
-    .doc{max-width:none;}
-    main{padding:0;}
+    html,body{background:#fff;} .doc{max-width:none;} main{padding:0;}
     .cover{padding:40mm 10mm 10mm;}
     h2{page-break-after:avoid;} h3{page-break-after:avoid;}
-    .ex,.ans,.box,.key,.warn,table,pre{page-break-inside:avoid;}
+    .ex,.ans,.box,.key,.warn,.analogy,table,.fig{page-break-inside:avoid;}
     .newpage{page-break-before:always;}
     @page{size:A4;margin:16mm 15mm;}
   }
@@ -61,218 +62,273 @@
 
 <header class="cover">
   <div class="tag">Fundoscopy Study · AI 학습자료</div>
-  <h1>Mamba &amp; Vision Mamba<br>스텝바이스텝 워크북</h1>
-  <p>ViT만 알아도 따라오는 10단계 · 수식과 숫자로 이해 · 연습문제 + 해설</p>
-  <p style="margin-top:22px;font-size:11pt;color:#bfeef1;">목표: “Attention은 O(L²), Mamba는 O(L)”를 수식·계산·코드로 스스로 설명할 수 있게 된다.</p>
+  <h1>Mamba &amp; Vision Mamba<br>쉬운 스텝바이스텝</h1>
+  <p>CNN · ViT · 어텐션을 아는 분을 위한 안내서</p>
+  <p style="margin-top:20px;font-size:11pt;color:#bfeef1;">비유로 이해 → 아주 작은 숫자로 확인 → 연습문제로 마무리</p>
 </header>
 
 <main>
 
-<h2>학습 로드맵</h2>
-<table class="roadmap">
-  <tr><th>Step</th><th>주제</th><th>한 줄 목표</th></tr>
-  <tr><td>1</td><td>SSM이란</td><td>시퀀스를 “요약 메모리”로 처리하는 발상 이해</td></tr>
-  <tr><td>2</td><td>이산화와 Δ</td><td>\( \bar A = e^{\Delta A} \), \( \bar B \approx \Delta B \) 직접 계산</td></tr>
-  <tr><td>3</td><td>재귀 계산</td><td>상태 \( h_t \) 를 손으로 갱신</td></tr>
-  <tr><td>4</td><td>컨볼루션·커널</td><td>\( K_k = C\bar A^k \bar B \) 유도하고 검산</td></tr>
-  <tr><td>5</td><td>선택성(S6)</td><td>입력이 Δ,B,C를 정한다는 것 이해</td></tr>
-  <tr><td>6</td><td>병렬 스캔</td><td>합성 규칙과 결합법칙으로 병렬화</td></tr>
-  <tr><td>7</td><td>Mamba 블록</td><td>conv·SSM·gate가 하는 일</td></tr>
-  <tr><td>8</td><td>Vision Mamba</td><td>패치화 + 양방향 스캔</td></tr>
-  <tr><td>9</td><td>복잡도</td><td>L vs L² 비용을 숫자로 비교</td></tr>
-  <tr><td>10</td><td>안저 적용</td><td>하이퍼파라미터로 CPU 모델 구성</td></tr>
+<h2>이 책을 읽는 법</h2>
+<p>이 책은 <b>“이미 CNN과 ViT(어텐션)를 아는 사람”</b> 을 기준으로 씁니다. 여러분이 아는 것에서 출발해 조금씩만 나아갑니다.</p>
+<table class="glossary">
+  <tr><th>여러분이 이미 아는 것</th><th>이 책이 붙이는 것</th></tr>
+  <tr><td>CNN: 작은 커널(필터)을 <b>미끄러뜨리며</b> 합성곱</td><td>그 “필터”가 여기서도 똑같이 나옵니다(Step 5)</td></tr>
+  <tr><td>ViT/어텐션: <b>모든 토큰이 모든 토큰을</b> 봄, \(O(L^2)\)</td><td>그걸 더 싸게 하는 방법(Step 1, 10)</td></tr>
+  <tr><td>softmax, 가중평균, 벡터·행렬 곱</td><td>그대로 씁니다(새로 외울 것 거의 없음)</td></tr>
+  <tr><td>고3 수학: 지수 \(e^x\), 합 기호 \(\sum\)</td><td>계산은 전부 이 수준입니다</td></tr>
 </table>
-<p class="muted">사용법: 각 Step의 “확인 문제”를 먼저 풀고, 부록 A의 연습문제로 복습한 뒤 부록 B 해설로 채점하세요. 수식은 검은 글씨, 계산은 <b>직접 손으로</b> 하는 것을 권합니다.</p>
+<div class="key"><b>약속</b>: 수식이 나오면 <b>기호마다 뜻을 우리말로</b> 붙입니다. 어려운 행렬 계산은 쓰지 않고, 처음엔 숫자 하나(스칼라)로만 봅니다.</div>
 
-<!-- ================= STEP 1 ================= -->
-<h2 class="newpage">Step 1. SSM이란 — 시퀀스를 요약 메모리로</h2>
-<div class="step"><b>핵심 발상</b>: 토큰을 전부 저장(attention)하는 대신, <b>하나의 상태 벡터(메모리)</b>를 순서대로 갱신한다.</div>
-<h3>연속시간 상태공간모델</h3>
-$$ h'(t) = A\,h(t) + B\,x(t), \qquad y(t) = C\,h(t) + D\,x(t) $$
+<!-- ============ STEP 1 ============ -->
+<h2 class="newpage">Step 1. 어텐션은 왜 비쌀까 (출발점)</h2>
+<p>ViT에서 이미지를 16×16 패치로 자르면 토큰이 <b>196개</b>쯤 됩니다. 어텐션은 <b>모든 토큰이 모든 토큰을</b> 봅니다.</p>
+<div class="fig">
+<svg viewBox="0 0 720 190" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <rect width="720" height="190" fill="#fff"/>
+  <!-- CNN -->
+  <text x="110" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#0e7c86">CNN: 옆만 본다</text>
+  <g fill="#cfe0e3" stroke="#0e7c86">
+    <rect x="20" y="50" width="30" height="30"/><rect x="55" y="50" width="30" height="30" stroke-width="3" fill="#8fd0d4"/>
+    <rect x="90" y="50" width="30" height="30"/><rect x="125" y="50" width="30" height="30"/>
+    <rect x="20" y="85" width="30" height="30"/><rect x="55" y="85" width="30" height="30" stroke-width="3" fill="#8fd0d4"/>
+    <rect x="90" y="85" width="30" height="30" stroke-width="3" fill="#8fd0d4"/><rect x="125" y="85" width="30" height="30"/>
+    <rect x="20" y="120" width="30" height="30"/><rect x="55" y="120" width="30" height="30"/>
+    <rect x="90" y="120" width="30" height="30"/><rect x="125" y="120" width="30" height="30"/>
+  </g>
+  <text x="86" y="175" text-anchor="middle" font-size="12" fill="#334">3×3 커널이 미끄러짐</text>
+  <!-- Attention -->
+  <text x="360" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#b26a00">Attention: 전부 본다</text>
+  <g stroke="#d9a24a" stroke-width="1" opacity="0.7">
+    <circle cx="300" cy="70" r="5" fill="#b26a00"/><circle cx="340" cy="70" r="5" fill="#b26a00"/><circle cx="380" cy="70" r="5" fill="#b26a00"/><circle cx="420" cy="70" r="5" fill="#b26a00"/>
+    <line x1="300" y1="70" x2="340" y2="70"/><line x1="300" y1="70" x2="380" y2="70"/><line x1="300" y1="70" x2="420" y2="70"/>
+    <line x1="340" y1="70" x2="380" y2="70"/><line x1="340" y1="70" x2="420" y2="70"/><line x1="380" y1="70" x2="420" y2="70"/>
+  </g>
+  <text x="360" y="120" text-anchor="middle" font-size="12" fill="#334">모든 쌍 = L² 연결</text>
+  <text x="360" y="140" text-anchor="middle" font-size="12" fill="#b26a00">L=196 → 38,416 쌍</text>
+  <!-- SSM -->
+  <text x="610" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#0e7c86">SSM: 릴레이로 이어받기</text>
+  <g>
+    <circle cx="530" cy="70" r="8" fill="#cfe0e3" stroke="#0e7c86"/><circle cx="570" cy="70" r="8" fill="#cfe0e3" stroke="#0e7c86"/>
+    <circle cx="610" cy="70" r="8" fill="#cfe0e3" stroke="#0e7c86"/><circle cx="650" cy="70" r="8" fill="#cfe0e3" stroke="#0e7c86"/>
+    <line x1="538" y1="70" x2="562" y2="70" stroke="#0e7c86" stroke-width="2" marker-end="url(#a)"/>
+    <line x1="578" y1="70" x2="602" y2="70" stroke="#0e7c86" stroke-width="2" marker-end="url(#a)"/>
+    <line x1="618" y1="70" x2="642" y2="70" stroke="#0e7c86" stroke-width="2" marker-end="url(#a)"/>
+  </g>
+  <defs><marker id="a" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#0e7c86"/></marker></defs>
+  <text x="610" y="120" text-anchor="middle" font-size="12" fill="#334">앞에서 뒤로 하나씩</text>
+  <text x="610" y="140" text-anchor="middle" font-size="12" fill="#0e7c86">L번 = O(L), 훨씬 쌈</text>
+</svg>
+<div class="figcap">그림 1. 세 가지 시야 — CNN은 국소, 어텐션은 전부, SSM은 체인으로 이어받기.</div>
+</div>
+<p>문제는 “전부 봄”이 <b>비용이 제곱으로 커진다</b>는 것. Mamba의 아이디어는 한마디로:</p>
+<div class="key"><b>“전부 보지 말고, 요약 메모리를 이어받자.”</b> 어텐션의 전역 시야를 유지하면서 비용을 \(O(L^2)\to O(L)\) 로 줄입니다.</div>
+<div class="ex"><span class="lbl">연습 1</span> CNN / 어텐션 / SSM 각각이 “무엇을 보고 계산하는가”를 한 줄씩 쓰시오.</div>
+
+<!-- ============ STEP 2 ============ -->
+<h2 class="newpage">Step 2. SSM = 요약 메모리 (릴레이 비유)</h2>
+<div class="analogy"><span class="lbl">비유</span> 계주 선수들이 바통을 이어받듯, 토큰을 하나씩 읽으며 <b>“지금까지의 요약”</b>을 다음으로 넘깁니다. 그 바통이 <b>상태</b> \(h\) 입니다.</div>
+<p>토큰을 하나 처리할 때마다 상태를 이렇게 갱신합니다(아주 단순화한 스칼라 버전):</p>
+$$ h_t = \underbrace{\bar A}_{\text{기억이 남는 비율}} h_{t-1} + \underbrace{\bar B}_{\text{새 입력 담는 양}} x_t, \qquad y_t = C\,h_t $$
+<table class="glossary">
+  <tr><th>기호</th><th>읽는 법</th><th>느낌</th></tr>
+  <tr><td>\(x_t\)</td><td>t번째 입력 토큰</td><td>새로 읽은 패치의 요약값</td></tr>
+  <tr><td>\(h_{t-1}\)</td><td>직전까지의 상태</td><td>넘겨받은 바통(과거 요약)</td></tr>
+  <tr><td>\(\bar A\)</td><td>0과 1 사이 숫자</td><td>기억이 <b>얼마나 남는지</b> (0.5면 절반만)</td></tr>
+  <tr><td>\(\bar B\)</td><td>양수</td><td>새 입력을 <b>얼마나 담는지</b></td></tr>
+  <tr><td>\(C\)</td><td>숫자</td><td>상태에서 <b>무엇을 읽어 출력</b>할지</td></tr>
+</table>
+<div class="warn"><b>핵심 감각</b>: 오래된 정보는 매 스텝 \( \bar A \) 씩 곱해져 점점 흐려집니다. 그래서 “요약”이지 “저장”이 아닙니다 — 이게 어텐션과의 결정적 차이(정보 병목)이자 장점(저비용).</div>
+<div class="ex"><span class="lbl">연습 2</span> 바통 비유로 상태 \(h\) 를 설명해 보세요. 또 \( \bar A = 0 \) 이면 무슨 일이 생길까요?</div>
+
+<!-- ============ STEP 3 ============ -->
+<h2 class="newpage">Step 3. “기억 손잡이” Δ</h2>
+<p>원래 SSM은 연속시간이라, 컴퓨터가 쓰려면 <b>스텝 크기 \( \Delta \)</b> 로 이산화합니다. \( \Delta \) 는 쉽게 말해 <b>기억 손잡이</b> 입니다.</p>
+$$ \bar A = e^{-\Delta} \ (\text{예시}), \qquad \bar B \approx \Delta $$
+<div class="analogy"><span class="lbl">비유</span> \( \Delta \) 를 크게 → “지금 것만 또렷이 기억”(과거는 금방 잊음). \( \Delta \) 를 작게 → “예전 것도 오래 기억”. 손잡이 하나로 <b>기억의 길이</b>를 조절.</div>
 <table>
-  <tr><th>기호</th><th>차원</th><th>의미</th></tr>
-  <tr><td>\(x(t)\)</td><td>D</td><td>입력(토큰의 특징)</td></tr>
-  <tr><td>\(h(t)\)</td><td>N</td><td><b>은닉 상태 = 지금까지 정보의 압축</b></td></tr>
-  <tr><td>\(A\)</td><td>N×N</td><td>상태 전이 (과거를 얼마나 넘길지)</td></tr>
-  <tr><td>\(B\)</td><td>N×D</td><td>입력 주입</td></tr>
-  <tr><td>\(C\)</td><td>D×N</td><td>출력 읽기</td></tr>
-  <tr><td>\(D\)</td><td>D</td><td>지름길(skip)</td></tr>
+  <tr><th>Δ</th><th>기억 남는 비율 \( \bar A = e^{-\Delta} \)</th><th>느낌</th></tr>
+  <tr><td>0.1</td><td>0.90</td><td>오래 기억</td></tr>
+  <tr><td>1.0</td><td>0.37</td><td>금방 잊음(현재 중심)</td></tr>
+  <tr><td>3.0</td><td>0.05</td><td>직전 것만 기억</td></tr>
 </table>
-<div class="key"><b>ViT 대비</b>: attention은 “모든 토큰을 저장하고 매번 전부 조회”(O(L²)), SSM은 “상태를 순차 갱신”(O(L)). 정보를 <b>압축</b>한다는 점이 장점이자 한계(정보 병목).</div>
-<div class="ex"><span class="lbl">연습 1</span> \(h'(t)=Ah(t)+Bx(t)\) 에서 \(A, B, C\) 각각이 “기억·입력·출력” 중 무엇과 대응하는지 쓰고, \(A\) 가 영행렬이면 무슨 일이 생기는지 설명하시오. <span class="muted">(부록 A 참고)</span></div>
+<div class="key"><b>안정성</b>: Mamba는 \( \bar A \) 가 항상 0~1이 되게 설계합니다. 그래서 상태가 폭주하지 않고 학습이 안정적입니다(옛날 RNN의 고질병 해결).</div>
+<div class="ex"><span class="lbl">연습 3</span> \( \Delta = 1 \) 일 때 \( \bar A = e^{-1} \) 을 소수 4자리로 구하시오(\( e^{-1}\approx0.3679 \)). 더 간단한 근사 \( \bar B \approx \Delta \) 도 함께 쓰시오.</div>
 
-<!-- ================= STEP 2 ================= -->
-<h2 class="newpage">Step 2. 이산화와 Δ — 연속을 토큰 스텝으로</h2>
-<div class="step"><b>핵심</b>: 컴퓨터는 이산적이므로 스텝 크기 \( \Delta \) 로 이산화한다.</div>
-$$ \bar A = e^{\Delta A}, \qquad \bar B = \Big(\int_0^{\Delta} e^{\tau A}\,d\tau\Big)B = A^{-1}\big(e^{\Delta A}-I\big)B \;\approx\; \Delta B $$
-$$ h_t = \bar A\,h_{t-1} + \bar B\,x_t, \qquad y_t = C\,h_t + D\,x_t $$
-<p><b>Δ의 의미</b>: 크면 <b>현재 입력을 강하게 반영</b>(과거는 잊음), 작으면 <b>상태를 오래 유지</b>.</p>
-<div class="warn"><b>안정성</b>: Mamba는 \(A=-\exp(A_{\log})\) 로 두어 \(A \lt 0\) → \( \bar A \in (0,1) \) → 재귀가 <b>수축</b> → 기울기 안정.</div>
-<h3>예: \(A=-1, B=C=1\)</h3>
-<table>
-  <tr><th>Δ</th><th>\( \bar A = e^{-\Delta} \)</th><th>정확한 \( \bar B = (1-e^{-\Delta}) \)</th><th>근사 \( \bar B = \Delta B \)</th></tr>
-  <tr><td>0.5</td><td>0.6065</td><td>0.3935</td><td>0.5000</td></tr>
-  <tr><td>2.0</td><td>0.1353</td><td>0.8647</td><td>2.0000</td></tr>
-</table>
-<div class="ex"><span class="lbl">연습 2</span> \(A=-2,\ B=0.5,\ \Delta=1\) 일 때 \( \bar A \), 정확한 \( \bar B \), 근사 \( \bar B \) 를 각각 소수 4자리로 계산하시오.</div>
-
-<!-- ================= STEP 3 ================= -->
-<h2 class="newpage">Step 3. 재귀 계산 — 상태를 손으로 갱신</h2>
-<div class="step"><b>핵심</b>: \( h_t = \bar A h_{t-1} + \bar B x_t \) 를 토큰마다 반복.</div>
-<p>\( \bar A = 0.5,\ \bar B = 1,\ x=[2,1,0,3] \), \(h_0=0\) 으로 하면</p>
+<!-- ============ STEP 4 ============ -->
+<h2 class="newpage">Step 4. 손으로 따라가기 (숫자 하나로)</h2>
+<p>\( \bar A = 0.5,\ \bar B = 1 \), 입력 \( x = [1, 2, 3] \), 시작 상태 \( h_0 = 0 \).</p>
 <table>
   <tr><th>t</th><th>x_t</th><th>계산</th><th>h_t</th></tr>
-  <tr><td>1</td><td>2</td><td>0.5·0 + 1·2</td><td>2.0</td></tr>
-  <tr><td>2</td><td>1</td><td>0.5·2 + 1·1</td><td>2.0</td></tr>
-  <tr><td>3</td><td>0</td><td>0.5·2 + 1·0</td><td>1.0</td></tr>
-  <tr><td>4</td><td>3</td><td>0.5·1 + 1·3</td><td>3.5</td></tr>
+  <tr><td>1</td><td>1</td><td>0.5·0 + 1·1</td><td>1.0</td></tr>
+  <tr><td>2</td><td>2</td><td>0.5·1 + 1·2</td><td>2.5</td></tr>
+  <tr><td>3</td><td>3</td><td>0.5·2.5 + 1·3</td><td>4.25</td></tr>
 </table>
-<div class="key">상태가 “과거를 압축”하지만 오래된 정보는 \( \bar A^k \) 만큼 약해진다.</div>
-<div class="ex"><span class="lbl">연습 3</span> \( \bar A = 0.5,\ \bar B = 1,\ x=[1,2,3] \) 일 때 \(h_1,h_2,h_3\) 를 계산하시오.</div>
+<p>보시다시피 복잡한 게 없습니다 — 곱하고 더하기를 반복할 뿐입니다. 이게 SSM의 <b>순차(재귀) 계산</b>입니다.</p>
+<div class="ex"><span class="lbl">연습 4</span> \( \bar A = 0.5,\ \bar B = 1,\ x=[1,2,3] \) 의 \(h_1, h_2, h_3\) 를 직접 계산하시오(위 표와 같아야 함).</div>
 
-<!-- ================= STEP 4 ================= -->
-<h2 class="newpage">Step 4. 컨볼루션과 커널 — 같은 식, 병렬 계산</h2>
-<div class="step"><b>핵심</b>: 재귀를 풀면 고정 커널과의 합성곱 \(y = K*x\) 가 된다.</div>
-$$ h_t = \sum_{s=1}^{t}\bar A^{\,t-s}\bar B\,x_s \;\Rightarrow\; y_t = \sum_{k=0}^{t-1}\underbrace{\big(C\bar A^{k}\bar B\big)}_{K_k}x_{t-k} $$
-<p>Step 3 예에서 \(K_k = 0.5^k\): \(K=[1,\ 0.5,\ 0.25,\ 0.125]\).</p>
+<!-- ============ STEP 5 ============ -->
+<h2 class="newpage">Step 5. 놀라운 사실 — 이건 사실 CNN 필터입니다</h2>
+<div class="analogy"><span class="lbl">연결</span> 여러분이 CNN에서 배운 <b>합성곱(커널을 미끄러뜨리기)</b>가 여기서 그대로 나옵니다. SSM을 “펼치면” 고정 커널과의 합성곱이 됩니다.</div>
+<p>재귀를 풀어 쓰면 \(y\) 는 <b>커널 \(K\) 를 \(x\) 에 미끄러뜨린 결과</b>와 같습니다:</p>
+$$ K_k = C\,\bar A^{\,k}\,\bar B, \qquad y_t = \sum_{k} K_k\, x_{t-k} $$
+<p>Step 4의 값으로: \( \bar A=0.5,\ \bar B=1,\ C=1 \) → \( K = [1,\ 0.5,\ 0.25,\ \dots] \) (0.5씩 줄어드는 필터!)</p>
 <table>
   <tr><th>t</th><th>합성곱 계산</th><th>y_t</th></tr>
-  <tr><td>1</td><td>1·2</td><td>2.0</td></tr>
-  <tr><td>2</td><td>1·1 + 0.5·2</td><td>2.0</td></tr>
-  <tr><td>3</td><td>1·0 + 0.5·1 + 0.25·2</td><td>1.0</td></tr>
-  <tr><td>4</td><td>1·3 + 0.5·0 + 0.25·1 + 0.125·2</td><td>3.5</td></tr>
+  <tr><td>1</td><td>1·1</td><td>1.0</td></tr>
+  <tr><td>2</td><td>1·2 + 0.5·1</td><td>2.5</td></tr>
+  <tr><td>3</td><td>1·3 + 0.5·2 + 0.25·1</td><td>4.25</td></tr>
 </table>
-<div class="key">재귀 결과(2.0, 2.0, 1.0, 3.5)와 <b>정확히 일치</b>. 커널이 입력과 무관(LTI)하면 병렬 합성곱이 가능.</div>
-<div class="ex"><span class="lbl">연습 4</span> \( \bar A=0.5,\ \bar B=1,\ C=1,\ x=[2,1,0,3] \) 에서 커널 \(K_0..K_3\) 을 구하고, 합성곱으로 \(y_4\) 를 계산하시오(답은 3.5).</div>
+<div class="key"><b>여기가 핵심 연결!</b> Step 4의 재귀 결과와 Step 5의 합성곱 결과가 <b>정확히 같습니다</b>. 그래서 SSM은 CNN처럼 <b>병렬</b>로 계산할 수 있습니다(커널이 고정일 때).</div>
+<div class="ex"><span class="lbl">연습 5</span> 위 커널 \(K=[1,\ 0.5,\ 0.25]\) 를 이용해 \(x=[1,2,3]\) 의 \(y_3\) 를 계산하시오.</div>
 
-<!-- ================= STEP 5 ================= -->
-<h2 class="newpage">Step 5. 선택성 — Mamba의 심장 (Selective SSM)</h2>
-<div class="step"><b>핵심</b>: \( \Delta, B, C \) 를 <b>입력마다 다르게</b> 만든다 → 무엇을 기억/무시할지 입력이 결정.</div>
-$$ \Delta_t=\mathrm{softplus}(\mathrm{Linear}_\Delta(x_t)),\quad B_t=\mathrm{Linear}_B(x_t),\quad C_t=\mathrm{Linear}_C(x_t) $$
-$$ h_t = \bar A_t h_{t-1} + \bar B_t x_t, \qquad y_t = C_t h_t + D x_t $$
+<!-- ============ STEP 6 ============ -->
+<h2 class="newpage">Step 6. 선택성 — 필터를 “입력이” 만든다</h2>
+<p>Step 5의 커널은 <b>고정</b>입니다. CNN 필터가 학습 후 고정되는 것과 같죠. 그런데 고정 필터는 “이건 중요, 저건 버려” 같은 <b>선택</b>을 못 합니다.</p>
+<div class="key"><b>Mamba의 한 끗</b>: \( \bar A, \bar B, C \) 를 <b>매 토큰마다 입력에서 계산</b>합니다. 즉 <b>필터를 입력이 그때그때 만듭니다</b>.</div>
+$$ (\Delta_t,\ B_t,\ C_t) = \text{작은 신경망}(x_t), \qquad \Delta_t = \mathrm{softplus}(\cdot) $$
 <table>
-  <tr><th></th><th>LTI (상수)</th><th>Selective (입력 의존)</th></tr>
-  <tr><td>커널</td><td>고정 → 합성곱 가능</td><td>매번 달라짐 → 합성곱 불가</td></tr>
-  <tr><td>계산</td><td>고속 합성곱</td><td><b>병렬 스캔</b> 필요</td></tr>
-  <tr><td>능력</td><td>선택 불가</td><td>입력 선택 가능</td></tr>
+  <tr><th></th><th>고정 필터 (CNN/기본 SSM)</th><th>입력이 만든 필터 (Mamba)</th></tr>
+  <tr><td>커널</td><td>학습 후 고정</td><td>토큰마다 새로 생성</td></tr>
+  <tr><td>병렬 합성곱</td><td>가능</td><td><b>불가</b>(커널이 자꾸 바뀜)</td></tr>
+  <tr><td>능력</td><td>무엇이든 같은 방식</td><td>중요한 것만 골라 기억</td></tr>
 </table>
-<div class="ex"><span class="lbl">연습 5</span> 왜 \(C_t\) 가 입력에 의존하면 정적 합성곱(컨볼루션)으로 계산할 수 없는지 한 문장으로 설명하시오.</div>
+<div class="warn">대신 합성곱을 못 쓰니, 원래의 <b>순차 계산(재귀)</b> 을 다시 써야 합니다 → Step 7에서 이 순차 계산을 <b>병렬화</b>하는 방법을 봅니다.</div>
+<div class="ex"><span class="lbl">연습 6</span> “입력이 필터를 만든다”는 것이 CNN의 고정 필터와 어떻게 다른지, 왜 장점인지 한 줄로 쓰시오.</div>
 
-<!-- ================= STEP 6 ================= -->
-<h2 class="newpage">Step 6. 병렬 스캔 — 재귀를 병렬로</h2>
-<div class="step"><b>핵심</b>: 선형 재귀를 아핀 합성으로 보고, 결합법칙으로 병렬화.</div>
-$$ h_t = a_t h_{t-1} + b_t,\qquad (a_2,b_2)\circ(a_1,b_1) = (a_2 a_1,\ a_2 b_1 + b_2) $$
-<p>쌍의 함수 \(z\mapsto az+b\) 로 보면 합성은 결합법칙 성립 → 앞에서부터의 합성(prefix)을 트리로 병렬 계산 \( \Rightarrow \) O(L) 작업, O(log L) 깊이.</p>
+<!-- ============ STEP 7 ============ -->
+<h2 class="newpage">Step 7. 순차 계산을 병렬로? (스캔 아이디어)</h2>
+<p>순차 계산은 앞이 끝나야 다음을 할 수 있어 느립니다. Mamba는 이 재귀를 <b>트리처럼 묶어서</b> 병렬화합니다. 어려운 수식 없이 아이디어만 보면:</p>
+<div class="box">
+<b>아이디어</b>: “\(h\) 를 갱신하는 규칙”을 두 개씩 짝지어 <b>합치기</b>. 합치는 순서를 바꿔도 결과가 같다는 성질(결합법칙) 덕분에, 한 번에 여러 쌍을 처리할 수 있습니다.
+</div>
+<div class="fig">
+<svg viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <rect width="700" height="170" fill="#fff"/>
+  <g font-size="12" fill="#334">
+    <text x="20" y="30">① 그냥 하면: 앞→뒤 하나씩 (느림)</text>
+    <circle cx="60" cy="55" r="9" fill="#cfe0e3" stroke="#0e7c86"/><circle cx="120" cy="55" r="9" fill="#cfe0e3" stroke="#0e7c86"/>
+    <circle cx="180" cy="55" r="9" fill="#cfe0e3" stroke="#0e7c86"/><circle cx="240" cy="55" r="9" fill="#cfe0e3" stroke="#0e7c86"/>
+    <line x1="69" y1="55" x2="111" y2="55" stroke="#0e7c86"/><line x1="129" y1="55" x2="171" y2="55" stroke="#0e7c86"/><line x1="189" y1="55" x2="231" y2="55" stroke="#0e7c86"/>
+    <text x="20" y="105">② 짝지어 합치고, 또 합치면: 한 번에 (빠름)</text>
+    <line x1="60" y1="130" x2="120" y2="130" stroke="#b26a00" stroke-width="2"/>
+    <line x1="180" y1="130" x2="240" y2="130" stroke="#b26a00" stroke-width="2"/>
+    <line x1="90" y1="130" x2="210" y2="130" stroke="#b26a00" stroke-width="2"/>
+    <line x1="60" y1="130" x2="60" y2="120" stroke="#0e7c86"/><line x1="120" y1="130" x2="120" y2="120" stroke="#0e7c86"/>
+    <line x1="180" y1="130" x2="180" y2="120" stroke="#0e7c86"/><line x1="240" y1="130" x2="240" y2="120" stroke="#0e7c86"/>
+  </g>
+</svg>
+<div class="figcap">그림 2. 순차(①) 대신 짝지어 합치면(②) 병렬 계산이 가능해집니다.</div>
+</div>
+<div class="key">결과는 순차와 <b>똑같고</b>, 속도는 병렬로. (PyTorch의 <code>tf.scan</code>/CUDA 커널이 이 원리)</div>
+<div class="ex"><span class="lbl">연습 7</span> “순차 계산을 병렬로 바꾼다”는 아이디어를 한 문장으로 설명하시오.</div>
+
+<!-- ============ STEP 8 ============ -->
+<h2 class="newpage">Step 8. Mamba 블록 — 부품 세 개</h2>
+<p>지금까지 배운 걸 조립하면 Mamba 블록입니다. ViT 블록과 나란히 보면 이해가 쉽습니다.</p>
+<div class="fig">
+<svg viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <rect width="720" height="180" fill="#fff"/>
+  <g font-size="12">
+    <text x="20" y="26" font-size="13" font-weight="bold" fill="#b26a00">ViT 블록</text>
+    <rect x="20" y="40" width="90" height="30" rx="6" fill="#fbe6c9" stroke="#d9a24a"/><text x="65" y="60" text-anchor="middle">Attention</text>
+    <rect x="130" y="40" width="60" height="30" rx="6" fill="#fbe6c9" stroke="#d9a24a"/><text x="160" y="60" text-anchor="middle">MLP</text>
+    <text x="20" y="130" font-size="13" font-weight="bold" fill="#0e7c86">Mamba 블록</text>
+    <rect x="20" y="100" width="70" height="30" rx="6" fill="#cfe0e3" stroke="#0e7c86"/><text x="55" y="120" text-anchor="middle">Conv1d</text>
+    <rect x="100" y="100" width="70" height="30" rx="6" fill="#8fd0d4" stroke="#0e7c86"/><text x="135" y="120" text-anchor="middle">SSM</text>
+    <rect x="180" y="100" width="60" height="30" rx="6" fill="#cfe0e3" stroke="#0e7c86"/><text x="210" y="120" text-anchor="middle">gate</text>
+    <text x="270" y="120" font-size="12" fill="#334">← Attention 자리에 SSM, MLP 자리에 gate</text>
+  </g>
+</svg>
+</div>
+<table class="glossary">
+  <tr><th>부품</th><th>하는 일</th><th>여러분이 아는 것과 연결</th></tr>
+  <tr><td>Conv1d</td><td>이웃 토큰을 <b>살짝 섞기</b></td><td>작은 CNN 커널 한 층</td></tr>
+  <tr><td>SSM</td><td>릴레이로 <b>전역 요약</b>(O(L))</td><td>Attention의 자리</td></tr>
+  <tr><td>gate</td><td>정보 <b>통과량 조절</b></td><td>MLP + 게이팅</td></tr>
+</table>
+<div class="ex"><span class="lbl">연습 8</span> Mamba 블록의 세 부품(Conv1d·SSM·gate)이 각각 하는 일을 한 줄씩 쓰시오.</div>
+
+<!-- ============ STEP 9 ============ -->
+<h2 class="newpage">Step 9. Vision Mamba — 이미지에 붙이기</h2>
+<p>ViT가 그랬듯, 이미지를 패치로 잘라 토큰으로 만듭니다. 224×224, 패치 16 → <b>196 토큰</b>.</p>
+<p>그런데 이미지는 <b>정해진 순서가 없습니다.</b> 글은 왼→오가 자연스럽지만, 그림은 위→아래가 정답이 아닙니다. 그래서 <b>양쪽에서 두 번 읽습니다.</b></p>
+<div class="fig">
+<svg viewBox="0 0 700 150" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+  <rect width="700" height="150" fill="#fff"/>
+  <g font-size="12" fill="#334">
+    <text x="30" y="34">정방향 →</text>
+    <circle cx="120" cy="30" r="8" fill="#cfe0e3" stroke="#1565c0"/><circle cx="180" cy="30" r="8" fill="#cfe0e3" stroke="#1565c0"/>
+    <circle cx="240" cy="30" r="8" fill="#cfe0e3" stroke="#1565c0"/><circle cx="300" cy="30" r="8" fill="#cfe0e3" stroke="#1565c0"/>
+    <line x1="128" y1="30" x2="300" y2="30" stroke="#1565c0" stroke-width="2"/>
+    <text x="30" y="94">← 역방향</text>
+    <circle cx="120" cy="90" r="8" fill="#e8dcf5" stroke="#6a1b9a"/><circle cx="180" cy="90" r="8" fill="#e8dcf5" stroke="#6a1b9a"/>
+    <circle cx="240" cy="90" r="8" fill="#e8dcf5" stroke="#6a1b9a"/><circle cx="300" cy="90" r="8" fill="#e8dcf5" stroke="#6a1b9a"/>
+    <line x1="300" y1="90" x2="128" y2="90" stroke="#6a1b9a" stroke-width="2"/>
+    <text x="360" y="66" font-size="13" fill="#0e7c86" font-weight="bold">두 결과를 더함 →</text>
+    <circle cx="520" cy="60" r="14" fill="#8fd0d4" stroke="#0e7c86"/>
+    <text x="560" y="66">y</text>
+  </g>
+</svg>
+<div class="figcap">그림 3. 양방향 스캔 — 정방향 + 역방향을 합쳐 순서에 덜 민감하게.</div>
+</div>
+<div class="key">어텐션은 순서가 없어도(순열 불변) 잘 동작하지만, SSM은 순서에 민감 → <b>양방향</b>으로 보완 + <b>Conv1d</b>로 이웃을 섞어 완화.</div>
+<div class="ex"><span class="lbl">연습 9</span> 224×224, 패치 16 이미지의 토큰 수를 구하고, 어텐션 행렬 원소 수(\(L^2\))와 SSM 상태 크기(\(L\times N\), \(N=16\))를 비교하시오.</div>
+
+<!-- ============ STEP 10 ============ -->
+<h2 class="newpage">Step 10. 정리 &amp; 안저(망막) 적용</h2>
 <table>
-  <tr><th>t</th><th>prefix \((A_t,B_t)\)</th><th>\(h_t=B_t\)</th></tr>
-  <tr><td>1</td><td>(0.5000, 2.0000)</td><td>2.0000</td></tr>
-  <tr><td>2</td><td>(0.2500, 2.0000)</td><td>2.0000</td></tr>
-  <tr><td>3</td><td>(0.1250, 1.0000)</td><td>1.0000</td></tr>
-  <tr><td>4</td><td>(0.0625, 3.5000)</td><td>3.5000</td></tr>
+  <tr><th></th><th>ViT (어텐션)</th><th>Vision Mamba</th></tr>
+  <tr><td>전역 상호작용</td><td>모든 토큰 쌍</td><td>양방향 릴레이 요약</td></tr>
+  <tr><td>비용</td><td>\(O(L^2)\)</td><td><b>\(O(L)\)</b></td></tr>
+  <tr><td>순서</td><td>상관없음</td><td>민감 → 양방향+Conv</td></tr>
+  <tr><td>선택</td><td>softmax 가중치</td><td>입력이 만든 필터(Δ,B,C)</td></tr>
+  <tr><td>기억</td><td>전부 저장</td><td>요약(작은 상태) → 병목</td></tr>
 </table>
-<p class="muted">(Step 3과 같은 예: \(a=0.5\), \(b=\bar B x=[2,1,0,3]\))</p>
-<div class="ex"><span class="lbl">연습 6</span> \(a=[0.5,0.5,0.5],\ b=[1,0,2]\) 에서 prefix \((A_3,B_3)\) 와 \(h_3\) 를 구하시오.</div>
-
-<!-- ================= STEP 7 ================= -->
-<h2 class="newpage">Step 7. Mamba 블록 — 부품의 역할</h2>
-<div class="step"><b>핵심</b>: “Linear → Conv1d → SiLU → SSM → gate → Linear”</div>
-<pre><code>x → in_proj → Conv1d(depthwise) → SiLU → SSM(Δ,B,C) → ⊙ SiLU(z) → out_proj → y</code></pre>
+<p><b>안저 사진에 왜 좋은가</b>: 고해상도일수록 어텐션 비용이 급증합니다. Mamba는 선형이라 <b>GPU 없이도</b> 실험·추론이 가능합니다. Mamba 기본 하이퍼파라미터만 써도 CPU 모델을 만들 수 있습니다:</p>
 <table>
-  <tr><th>부품</th><th>역할</th><th>ViT 대응</th></tr>
-  <tr><td><code>in_proj</code></td><td>x를 두 갈래(x', z)로</td><td>QKV/MLP 확장</td></tr>
-  <tr><td><code>Conv1d</code></td><td>이웃 토큰 섞기(지역성)</td><td>없음(패치 임베딩만)</td></tr>
-  <tr><td><code>SSM</code></td><td>전역 문맥, O(L)</td><td>Self-Attention</td></tr>
-  <tr><td><code>⊙ SiLU(z)</code></td><td>게이트(통과량 조절)</td><td>MLP</td></tr>
+  <tr><th>d_model</th><th>d_inner (×2)</th><th>dt_rank (÷16 올림)</th><th>d_state (N)</th></tr>
+  <tr><td>128</td><td>256</td><td>8</td><td>16</td></tr>
+  <tr><td>256</td><td>512</td><td>16</td><td>16</td></tr>
 </table>
-<div class="ex"><span class="lbl">연습 7</span> Conv1d가 없으면 어떤 문제가 생길 수 있는지, 게이트 \( \odot \mathrm{SiLU}(z) \) 는 attention의 어떤 역할을 대신하는지 설명하시오.</div>
+<div class="ex"><span class="lbl">연습 10</span> \( d_{model}=192 \) 일 때 \( d_{inner} \) 와 \( dt\_rank \) 를 구하시오.</div>
 
-<!-- ================= STEP 8 ================= -->
-<h2 class="newpage">Step 8. Vision Mamba — 이미지에 적용</h2>
-<div class="step"><b>핵심</b>: 이미지 → 패치 → 토큰 → <b>양방향</b> SSM 스캔.</div>
+<hr>
+
+<!-- ============ 연습문제 ============ -->
+<h2 class="newpage">연습문제 (정답은 다음 장)</h2>
+<div class="ex"><span class="lbl">1</span> CNN / 어텐션 / SSM 이 각각 “무엇을 보고 계산하는가”?</div>
+<div class="ex"><span class="lbl">2</span> 바통(상태 \(h\)) 비유로 SSM을 설명하고, \( \bar A=0 \) 이면 어떤 모델 같아지는지.</div>
+<div class="ex"><span class="lbl">3</span> \( \Delta=1 \) 일 때 \( \bar A=e^{-1} \) (소수 4자리)와 근사 \( \bar B\approx\Delta \) 를 구하시오.</div>
+<div class="ex"><span class="lbl">4</span> \( \bar A=0.5,\ \bar B=1,\ x=[1,2,3] \) 의 \(h_1,h_2,h_3\) 를 계산하시오.</div>
+<div class="ex"><span class="lbl">5</span> 커널 \(K=[1,0.5,0.25]\) 로 \(x=[1,2,3]\) 의 \(y_3\) 를 계산하시오.</div>
+<div class="ex"><span class="lbl">6</span> “입력이 필터를 만든다”가 CNN 고정 필터와 어떻게 다른가?</div>
+<div class="ex"><span class="lbl">7</span> 순차 계산을 병렬로 바꾸는 아이디어를 한 문장으로.</div>
+<div class="ex"><span class="lbl">8</span> Mamba 블록의 세 부품 역할.</div>
+<div class="ex"><span class="lbl">9</span> 224×224, 패치 16의 토큰 수, 어텐션 행렬 원소 수, SSM 상태 크기(N=16).</div>
+<div class="ex"><span class="lbl">10</span> \( d_{model}=192 \) 에서 \( d_{inner}, dt\_rank\).</div>
+
+<!-- ============ 정답 ============ -->
+<h2 class="newpage">정답과 해설</h2>
+<div class="ans"><span class="lbl">1</span> CNN은 <b>국소</b>(이웃 몇 개), 어텐션은 <b>전부</b>(모든 토큰 쌍), SSM은 <b>체인</b>(앞에서 뒤로 요약을 이어받음).</div>
+<div class="ans"><span class="lbl">2</span> 토큰을 읽을 때마다 “지금까지의 요약(바통)”을 갱신해 다음으로 넘긴다. \( \bar A=0 \) 이면 과거를 전부 버리고 직전 입력만 남아 <b>메모리 없는 신경망(MLP)</b> 처럼 된다.</div>
+<div class="ans"><span class="lbl">3</span> \( \bar A=e^{-1}=0.3679 \), \( \bar B\approx\Delta=1 \). (참고로 정확한 값은 \( 0.6321 \))</div>
+<div class="ans"><span class="lbl">4</span> \(h_1=0.5\cdot0+1=1.0\), \(h_2=0.5\cdot1+2=2.5\), \(h_3=0.5\cdot2.5+3=4.25\).</div>
+<div class="ans"><span class="lbl">5</span> \(y_3 = K_0x_3+K_1x_2+K_2x_1 = 1\cdot3+0.5\cdot2+0.25\cdot1 = 4.25\). (연습 4와 같은 값!)</div>
+<div class="ans"><span class="lbl">6</span> CNN 필터는 학습 후 <b>고정</b>이라 모든 입력에 똑같이 적용된다. Mamba는 토큰마다 \( \Delta,B,C \) 를 새로 만들어 <b>중요한 것만 골라 기억</b>할 수 있다.</div>
+<div class="ans"><span class="lbl">7</span> 재귀 갱신 규칙을 두 개씩 <b>짝지어 합치는</b> 방식을 쓰면(결합법칙), 한 번에 여러 쌍을 처리해 병렬로 계산할 수 있다.</div>
+<div class="ans"><span class="lbl">8</span> <b>Conv1d</b>=이웃 토큰 섞기(지역성), <b>SSM</b>=전역 요약(어텐션 자리), <b>gate</b>=정보 통과량 조절(MLP 자리).</div>
+<div class="ans"><span class="lbl">9</span> 토큰 \(=(224/16)^2=196\). 어텐션 행렬 \(=196^2=\mathbf{38{,}416}\). SSM 상태 \(=196\times16=\mathbf{3{,}136}\).</div>
+<div class="ans"><span class="lbl">10</span> \( d_{inner}=2\cdot192=\mathbf{384} \), \( dt\_rank=\lceil192/16\rceil=\mathbf{12} \).</div>
+
+<hr>
+<h2>더 공부하려면</h2>
 <ul>
-  <li>패치화: 224×224, patch 16 → 14×14 = <b>196</b> 토큰 (+class = 197)</li>
-  <li>양방향: \( y = \mathrm{SSM}_{\text{fwd}}(x) + \mathrm{flip}(\mathrm{SSM}_{\text{bwd}}(\mathrm{flip}(x))) \)</li>
-  <li>Conv1d + 양방향으로 “순서 의존성”을 완화</li>
+  <li>인터랙티브 애니메이션: <code>docs/vision-mamba.html</code> (슬라이더로 Δ 조절 등)</li>
+  <li>슬라이드 덱: <code>slides/vision-mamba.pdf</code> (18장)</li>
+  <li>구현 계획: <code>app/PLAN-keras-tensorflow.md</code></li>
 </ul>
-<div class="warn">이미지는 고정된 순서가 없다 → 단방향 스캔은 패치 순서에 민감 → <b>양방향이 필수</b>.</div>
-<div class="ex"><span class="lbl">연습 8</span> 448×448 이미지, patch 16일 때 토큰 수와 attention 행렬 원소 수(\(L^2\))를 구하시오.</div>
-
-<!-- ================= STEP 9 ================= -->
-<h2 class="newpage">Step 9. 복잡도 — 왜 빠른가</h2>
-$$ \text{Attention} = O(L^2 D), \qquad \text{SSM} = O(L\,D\,N) $$
-<table>
-  <tr><th>L</th><th>해상도</th><th>Attention ≈ 2L²D</th><th>SSM ≈ 3L·d_inner·N</th><th>배수</th></tr>
-  <tr><td>196</td><td>224² (D=256)</td><td>19.7M</td><td>4.8M</td><td>4.08×</td></tr>
-  <tr><td>784</td><td>448²</td><td>944.1M</td><td>57.8M</td><td>16.3×</td></tr>
-</table>
-<div class="key">L이 2배 → attention 4배, SSM 2배. 고해상도일수록 격차 폭증. (Vim 논문: DeiT 대비 약 2.8배 빠르고 GPU 메모리 약 86.8% 절감)</div>
-<div class="ex"><span class="lbl">연습 9</span> \(L=196,\ D=256,\ d_{inner}=512,\ N=16\) 에서 attention \(2L^2D\) 와 SSM \(3L d_{inner}N\) 을 각각 계산하고 배수를 구하시오.</div>
-
-<!-- ================= STEP 10 ================= -->
-<h2 class="newpage">Step 10. 안저(망막) 적용 — 하이퍼파라미터와 설계</h2>
-<div class="step"><b>핵심</b>: Mamba 기본값을 그대로 써서 CPU 친화 모델을 구성한다.</div>
-<p><code>expand=2 → d_inner=2·d_model, d_state(N)=16, d_conv=4, dt_rank=ceil(d_model/16)</code></p>
-<table>
-  <tr><th>d_model</th><th>d_inner</th><th>dt_rank</th><th>d_state</th><th>d_conv</th></tr>
-  <tr><td>128</td><td>256</td><td>8</td><td>16</td><td>4</td></tr>
-  <tr><td>256</td><td>512</td><td>16</td><td>16</td><td>4</td></tr>
-  <tr><td>768</td><td>1536</td><td>48</td><td>16</td><td>4</td></tr>
-</table>
-<div class="key"><b>설계 메모</b>: 검진 1차는 <code>normal vs abnormal</code> 이진 분류부터. 라벨은 소견 문서(<code>docs/fundus-common-findings-and-red-flags.md</code>)와 1:1로 맞춘다. <b>환자 단위 split</b>(양안 누수 방지) 필수.</div>
-<div class="ex"><span class="lbl">연습 10</span> \(d_{model}=192\) 일 때 \(d_{inner}\) 와 \(dt\_rank\) 를 구하시오.</div>
-
-<hr>
-
-<!-- ================= 부록 A ================= -->
-<h2 class="newpage">부록 A. 연습문제 (답은 부록 B)</h2>
-<div class="ex"><span class="lbl">A1</span> SSM에서 \(A\) 가 영행렬이면 상태가 어떻게 되는가? 어떤 모델과 비슷해지는가?</div>
-<div class="ex"><span class="lbl">A2</span> \(A=-2,\ B=0.5,\ \Delta=1\) 에서 \( \bar A \), 정확한 \( \bar B \), 근사 \( \bar B \) (소수 4자리).</div>
-<div class="ex"><span class="lbl">A3</span> \( \bar A=0.5,\ \bar B=1,\ x=[1,2,3] \) 에서 \(h_1,h_2,h_3\).</div>
-<div class="ex"><span class="lbl">A4</span> \( \bar A=0.5,\ \bar B=1,\ C=1,\ x=[2,1,0,3] \) 에서 커널 \(K_0..K_3\) 와 \(y_1..y_4\).</div>
-<div class="ex"><span class="lbl">A5</span> \(C_t\) 가 입력 의존이면 왜 정적 합성곱으로 계산할 수 없는가?</div>
-<div class="ex"><span class="lbl">A6</span> \(a=[0.5,0.5,0.5],\ b=[1,0,2]\) 에서 prefix \((A_3,B_3)\) 와 \(h_3\).</div>
-<div class="ex"><span class="lbl">A7</span> Mamba 블록에서 Conv1d가 하는 일과, 게이트가 대신하는 attention의 역할을 쓰시오.</div>
-<div class="ex"><span class="lbl">A8</span> 448×448, patch 16 이미지의 토큰 수와 attention 행렬 원소 수.</div>
-<div class="ex"><span class="lbl">A9</span> \(L=196,D=256,d_{inner}=512,N=16\) 에서 attention·SSM 비용과 배수.</div>
-<div class="ex"><span class="lbl">A10</span> \(d_{model}=192\) 에서 \(d_{inner}\), \(dt\_rank\).</div>
-<div class="ex"><span class="lbl">A11 (코딩)</span> 아래를 실행해 Step 3과 같은 값이 나오는지 확인하시오.
-<pre><code>import numpy as np
-Abar, Bbar, C = 0.5, 1.0, 1.0
-x = [2.0, 1.0, 0.0, 3.0]
-h = 0.0
-for t, xt in enumerate(x, 1):
-    h = Abar*h + Bbar*xt
-    print(t, round(h, 4))</code></pre></div>
-<div class="ex"><span class="lbl">A12 (서술)</span> attention과 SSM의 “전역 상호작용”이 어떻게 다른지, 그리고 SSM의 정보 병목이 왜 생기는지 3문장 이내로 쓰시오.</div>
-
-<!-- ================= 부록 B ================= -->
-<h2 class="newpage">부록 B. 정답과 해설</h2>
-
-<div class="ans"><span class="lbl">A1</span> \(A=0\) 이면 상태가 \(h_t=\bar B x_t\) 로 <b>직전 입력만</b> 남고 과거가 사라진다 → 사실상 <b>메모리 없는 피드포워드(MLP)</b>에 가까워진다.</div>
-<div class="ans"><span class="lbl">A2</span> \( \bar A=e^{-2}=0.1353 \).  정확한 \( \bar B=\frac{e^{-2}-1}{-2}\cdot0.5=\frac{0.8647}{2}\cdot0.5=0.2162 \).  근사 \( \bar B=\Delta B=0.5 \).</div>
-<div class="ans"><span class="lbl">A3</span> \(h_1=0.5\cdot0+1\cdot1=1.0\), \(h_2=0.5\cdot1+2=2.5\), \(h_3=0.5\cdot2.5+3=4.25\).</div>
-<div class="ans"><span class="lbl">A4</span> \(K_k=C\bar A^k\bar B=0.5^k\) → \(K=[1,\ 0.5,\ 0.25,\ 0.125]\).
-\(y_1=1\cdot2=2.0\), \(y_2=1\cdot1+0.5\cdot2=2.0\), \(y_3=1\cdot0+0.5\cdot1+0.25\cdot2=1.0\),
-\(y_4=1\cdot3+0.5\cdot0+0.25\cdot1+0.125\cdot2=3.5\). (재귀 A3/Step3과 동일 값)</div>
-<div class="ans"><span class="lbl">A5</span> 합성곱 커널 \(K_k=C\bar A^k\bar B\) 는 \(C,B\) 가 상수일 때만 위치에 무관하게 고정된다. \(C_t,B_t\) 가 입력마다 바뀌면 커널이 모든 위치에서 달라져 <b>하나의 고정 커널로 표현할 수 없다</b>.</div>
-<div class="ans"><span class="lbl">A6</span> \(P_1=(0.5,1)\), \(P_2=(0.25,\ 0.5\cdot1+0)=(0.25,0.5)\), \(P_3=(0.125,\ 0.5\cdot0.5+2)=(0.125,2.25)\).  따라서 \( (A_3,B_3)=(0.125,\ 2.25) \), \(h_3=2.25\).</div>
-<div class="ans"><span class="lbl">A7</span> Conv1d는 이웃 패치를 먼저 섞어 <b>지역성/근접성</b>을 주고 SSM의 순서 의존성을 완화한다(블록 내 “위치 감각”). 게이트 \( \odot \mathrm{SiLU}(z) \) 는 SSM 출력의 통과량을 입력이 조절해, attention/MLP가 하던 <b>선택적 정보 전달</b>을 대신한다.</div>
-<div class="ans"><span class="lbl">A8</span> \(448/16=28\) → \(28^2=\mathbf{784}\) 토큰. attention 행렬 원소 \(=784^2=\mathbf{614{,}656}\).</div>
-<div class="ans"><span class="lbl">A9</span> Attention \(=2\cdot196^2\cdot256\approx\mathbf{19.7M}\).  SSM \(=3\cdot196\cdot512\cdot16\approx\mathbf{4.8M}\).  배수 \(\approx\mathbf{4.08\times}\).</div>
-<div class="ans"><span class="lbl">A10</span> \(d_{inner}=2\cdot192=\mathbf{384}\).  \(dt\_rank=\lceil 192/16\rceil=\mathbf{12}\).</div>
-<div class="ans"><span class="lbl">A11</span> 출력: <code>1 2.0</code> / <code>2 2.0</code> / <code>3 1.0</code> / <code>4 3.5</code> — Step 3과 일치. (<code>Abar=0.5, Bbar=1</code> 로 두면 \( \bar B_t x_t = x_t\).)</div>
-<div class="ans"><span class="lbl">A12</span> Attention은 모든 토큰 쌍을 직접 비교해 전역 상호작용을 만든다. SSM은 고정 크기 상태 \(h\in\mathbb{R}^N\) 를 통해 정보를 순차 전달하므로, 상태 차원 N이 병목이 되어 매우 긴 문맥의 세부 정보는 압축 과정에서 손실될 수 있다.</div>
-
-<hr>
-<h2>참고자료</h2>
-<ol>
-  <li>Vision Mamba: Efficient Visual Representation Learning with Bidirectional State Space Model. ICML 2024. arXiv:2401.09417.</li>
-  <li>Mamba: Linear-Time Sequence Modeling with Selective State Spaces. arXiv:2312.00752.</li>
-  <li>MedMamba: Vision Mamba for Medical Image Classification. arXiv:2403.03849.</li>
-  <li>LEMUR: Ultra-Lightweight Distilled Retinal Foundation Model Using Mamba (github.com/andregdmitri/LEMUR).</li>
-  <li>프로젝트 내: <code>docs/vision-mamba.html</code>(애니메이션), <code>app/PLAN-keras-tensorflow.md</code>(구현 계획).</li>
-</ol>
-<p class="muted" style="margin-top:18px;">의료진 학습용 자료입니다. 계산값은 모두 스크립트로 검증했습니다.</p>
+<p class="muted" style="margin-top:16px;">계산값은 모두 스크립트로 검증했습니다. 의료진 학습용 자료입니다.</p>
 
 </main>
 </div>
