@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fundoscopy-study</title>
+<style>
+  :root{--bg:#0b1220;--card:#16233a;--line:#26374f;--ink:#e8eef7;--muted:#93a4bd;--teal:#2fd4d4}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(1200px 600px at 50% -10%,#123,#0b1220 60%);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕",system-ui,"Segoe UI",Roboto,sans-serif;padding:24px;}
+  .wrap{max-width:780px;width:100%}
+  h1{font-size:34px;margin:0 0 8px}
+  .sub{color:var(--muted);margin-bottom:24px}
+  h3{color:var(--muted);font-size:14px;letter-spacing:1.5px;text-transform:uppercase;margin:22px 0 8px}
+  a.card{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:16px 18px;margin:10px 0;transition:transform .15s,border-color .15s,box-shadow .15s}
+  a.card:hover{transform:translateY(-2px);border-color:var(--teal);box-shadow:0 8px 30px rgba(47,212,212,.15)}
+  .card h2{margin:0 0 4px;font-size:19px;color:var(--teal)}
+  .card p{margin:0;color:var(--muted);font-size:14.5px}
+  .tag{display:inline-block;font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--muted);margin-left:8px}
+  footer{color:var(--muted);font-size:13px;margin-top:22px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>fundoscopy-study</h1>
+    <div class="sub">안저 AI 앱 · 의사 학습자료 프로젝트</div>
+
+    <h3>Vision Mamba 설명</h3>
+    <a class="card" href="docs/vision-mamba.html">
+      <h2>Vision Mamba 애니메이션 <span class="tag">인터랙티브</span></h2>
+      <p>ViT → SSM → Δ → 숫자 예 → 컨볼루션 → 병렬 스캔 → 선택성 → 코드 (슬라이더·버튼)</p>
+    </a>
+    <a class="card" href="slides/vision-mamba.pdf">
+      <h2>Vision Mamba 슬라이드 PDF <span class="tag">18장</span></h2>
+      <p>같은 내용을 PPT형 슬라이드로 (수식·코드·숫자 포함)</p>
+    </a>
+
+    <h3>안저 임상 학습자료</h3>
+    <a class="card" href="slides/fundoscopy-slides.pdf">
+      <h2>안저검사 기초와 흔한 소견 · Red Flag <span class="tag">27장 PDF</span></h2>
+      <p>적색반사·유두·황반·C/D·A/V·ISNT 도해 → 흔한 소견 → 아틀라스 → Red Flag</p>
+    </a>
+    <a class="card" href="https://github.com/kimhs950627/fundoscopy-study/blob/master/docs/fundus-common-findings-and-red-flags.md">
+      <h2>안저 흔한 소견 & Red Flag (문서)</h2>
+      <p>Markdown 참조문서 (GitHub에서 렌더링)</p>
+    </a>
+    <a class="card" href="https://github.com/kimhs950627/fundoscopy-study/blob/master/docs/datasets.md">
+      <h2>공개 데이터셋 카탈로그</h2>
+      <p>지도학습용 안저 데이터셋 + CPU 실험 계획 (GitHub에서 렌더링)</p>
+    </a>
+
+    <h3>코드 · 계획</h3>
+    <a class="card" href="https://github.com/kimhs950627/fundoscopy-study/blob/master/app/PLAN-keras-tensorflow.md">
+      <h2>Keras / TensorFlow 구현 계획</h2>
+      <p>SSM 커스텀 레이어, tf.data, TFLite 배포, 마일스톤 (미착수)</p>
+    </a>
+    <a class="card" href="https://github.com/kimhs950627/fundoscopy-study">
+      <h2>GitHub 저장소</h2>
+      <p>전체 소스 · 이미지 크레딧</p>
+    </a>
+
+    <footer>
+      의료진 학습·개발 참고자료입니다. 이미지 출처: Wikimedia Commons (PD/CC-BY/CC-BY-SA), <code>assets/images/CREDITS.json</code>.
+    </footer>
+  </div>
+</body>
+</html>

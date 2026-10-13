@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Vision Mamba 쉽게 이해하기</title>
+<style>
+  :root{
+    --ink:#0f1b2d; --muted:#5b6b82; --line:#e2e8f0; --bg:#f7f9fc;
+    --teal:#0e7c86; --teal-d:#0a5b62; --red:#c62828; --amber:#b26a00;
+    --blue:#1565c0; --violet:#6a1b9a; --green:#1b7f4b;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:#334;font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo",system-ui,"Segoe UI",Roboto,sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .deck{display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px;counter-reset:pg 0;}
+  .slide{position:relative;width:1333px;height:750px;background:#fff;overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.35);padding:44px 54px 52px;counter-increment:pg;}
+  .slide .pg{position:absolute;right:22px;bottom:14px;font-size:13px;color:var(--muted);}
+  .slide .pg::after{content:counter(pg);}
+  .slide .brand{position:absolute;left:54px;bottom:14px;font-size:13px;color:var(--muted);}
+  h1{font-size:42px;line-height:1.2;margin:0 0 8px;}
+  h2{font-size:30px;line-height:1.25;margin:0 0 14px;color:var(--teal-d);}
+  h3{font-size:19px;margin:0 0 6px;}
+  p{font-size:17px;line-height:1.5;margin:0 0 8px;}
+  small,.muted{color:var(--muted);}
+  ul{margin:0 0 8px 0;padding-left:20px;} li{font-size:17px;line-height:1.45;margin:3px 0;}
+  .kicker{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);font-weight:700;margin-bottom:8px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  #s0{background:linear-gradient(135deg,#0a2a33,#0e7c86 60%,#14a3ad);color:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 80px;}
+  #s0 h1{font-size:54px;color:#fff;} #s0 p{color:#dff3f5;font-size:21px;} #s0 .kicker{color:#a8e6ea;}
+  .card{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:14px 16px;}
+  .card.teal{background:#e7f4f5;border-color:#bfe0e3;}
+  .card.amber{background:#fff6e8;border-color:#f2dcb3;}
+  .card.red{background:#fdecec;border-color:#f3c4c4;}
+  table{width:100%;border-collapse:collapse;font-size:15px;}
+  th,td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top;}
+  th{background:#eef3f8;color:#22384f;} tr:nth-child(even) td{background:#fafcfe;}
+  pre{background:#0d1728;color:#d7e6f5;border-radius:10px;padding:11px 13px;overflow:auto;font-size:12.5px;line-height:1.34;margin:0;}
+  pre code{color:#d7e6f5;}
+  code{background:#eef3f8;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:14px;}
+  pre code{border:none;background:none;padding:0;font-size:12.5px;}
+  .callout{border-left:5px solid var(--teal);background:#e7f4f5;padding:11px 15px;border-radius:0 9px 9px 0;font-size:16px;}
+  .callout.amber{border-color:var(--amber);background:#fff6e8;}
+  .callout.red{border-color:var(--red);background:#fdecec;}
+  .pill{display:inline-block;border-radius:999px;padding:2px 11px;font-size:14px;font-weight:700;}
+  .pill.vit{background:#fbe6c9;color:#8a4b00;} .pill.mamba{background:#cdeef0;color:#0a5b62;}
+  .pipe{display:flex;gap:7px;align-items:center;justify-content:center;flex-wrap:wrap;}
+  .stage{background:#eef3f8;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:14px;text-align:center;min-width:92px;}
+  .arrow{color:var(--teal);font-size:18px;}
+  @media print{
+    html,body{background:#fff;} .deck{gap:0;padding:0;}
+    .slide{box-shadow:none;width:13.333in;height:7.5in;padding:0.45in 0.55in 0.45in;page-break-after:always;break-after:page;}
+    @page{size:13.333in 7.5in;margin:0;}
+  }
+</style>
+<script>
+  window.MathJax = { tex:{ inlineMath:[['\\(','\\)']], displayMath:[['$$','$$']] }, svg:{fontCache:'global'} };
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<div class="deck">
+
+<!-- 1 TITLE -->
+<section class="slide" id="s0">
+  <div class="kicker">Fundoscopy Study · AI 기초</div>
+  <h1>Vision Mamba,<br>쉽게 이해하기</h1>
+  <p>ViT를 아는 사람을 위한 SSM · Vision Mamba</p>
+  <p style="color:#a8e6ea;font-size:16px;margin-top:22px;">
+    <span class="pill vit">ViT: O(L²)</span> &nbsp;→&nbsp; <span class="pill mamba">Mamba: O(L)</span>
+  </p>
+</section>
+
+<!-- 2 요약 -->
+<section class="slide">
+  <div class="kicker">요약</div>
+  <h2>한 줄 요약</h2>
+  <p style="font-size:20px;">Attention이 “모든 토큰을 매번 전부 조회”라면, Vision Mamba는 <b>입력이 조절하는 요약 메모리(상태)를 양방향으로 순차 갱신</b>해서 O(L)로 같은 전역 문맥을 얻는다.</p>
+  <div class="grid3" style="margin-top:22px;">
+    <div class="card teal"><h3>Attention</h3><p style="font-size:15px;margin:0;">모든 토큰 쌍 비교 · O(L²)</p></div>
+    <div class="card teal"><h3>SSM / Mamba</h3><p style="font-size:15px;margin:0;">요약 상태를 순차 갱신 · O(L)</p></div>
+    <div class="card teal"><h3>Vision Mamba</h3><p style="font-size:15px;margin:0;">양방향 스캔 + 지역 Conv</p></div>
+  </div>
+  <div class="callout" style="margin-top:20px;">이 덱은 순서대로: ViT → SSM → 이산화(Δ) → 숫자 예 → 컨볼루션 → 병렬 스캔 → 선택성 → 코드 → 블록 → 비용.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 3 ViT -->
+<section class="slide">
+  <div class="kicker">1. ViT 복습</div>
+  <h2>왜 바꾸려는가</h2>
+  <p>이미지를 패치 토큰 <code>x₁…x_L</code> 로 만들고, attention으로 <b>모든 토큰 쌍</b>을 비교한다. L이 커지면 연산·메모리가 <b>L²</b>로 폭증.</p>
+  $$ \mathrm{Attention}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d}}\right)V, \qquad \text{cost} = O(L^2 D) $$
+  <table style="margin-top:12px;">
+    <tr><th>L (토큰)</th><th>해상도 예</th><th>Attention 행렬 원소 수</th><th>SSM 상태 크기</th></tr>
+    <tr><td>197</td><td>224² → 16² 패치</td><td>38,809</td><td>3,152</td></tr>
+    <tr><td>784</td><td>448² → 28² 패치</td><td>614,656</td><td>12,544</td></tr>
+  </table>
+  <div class="callout red" style="margin-top:14px;">L이 2배 → attention 4배, SSM 2배. 고해상도일수록 격차 폭증.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 4 SSM -->
+<section class="slide">
+  <div class="kicker">2. 출발점</div>
+  <h2>상태공간모델(SSM)</h2>
+  $$ h'(t) = A\,h(t) + B\,x(t), \qquad y(t) = C\,h(t) + D\,x(t) $$
+  <div class="grid2" style="margin-top:10px;">
+    <div>
+      <table>
+        <tr><th>기호</th><th>의미</th></tr>
+        <tr><td><code>h</code></td><td><b>은닉 상태 = 정보의 압축 메모리</b></td></tr>
+        <tr><td><code>A</code></td><td>상태 전이</td></tr>
+        <tr><td><code>B</code></td><td>입력 주입</td></tr>
+        <tr><td><code>C</code></td><td>출력 읽기</td></tr>
+        <tr><td><code>D</code></td><td>지름길(skip)</td></tr>
+      </table>
+    </div>
+    <div class="card teal">
+      <h3>직관</h3>
+      <p style="font-size:15px;margin:0;">Attention = 모든 토큰을 저장 후 매번 전부 조회.<br>
+      SSM = <b>하나의 요약 메모리를 순서대로 갱신</b>하며 읽는다 → O(L).</p>
+    </div>
+  </div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 5 이산화 -->
+<section class="slide">
+  <div class="kicker">3. 이산화</div>
+  <h2>Δ는 어디서 오나 (ZOH)</h2>
+  <p>구간 전체에서 입력이 일정하다고 보는 영차홀드 해:</p>
+  $$ \bar A = e^{\Delta A}, \qquad \bar B = \Big(\int_{0}^{\Delta} e^{\tau A}d\tau\Big)B = A^{-1}\big(e^{\Delta A}-I\big)B $$
+  <p>Mamba는 행렬 역산을 피하려 1차 근사 <code>B̄ ≈ ΔB</code> 사용. A=−1, B=1 일 때:</p>
+  <table>
+    <tr><th>Δ</th><th>정확한 B̄</th><th>근사 B̄ = ΔB</th></tr>
+    <tr><td>0.5</td><td>0.3935</td><td>0.5000</td></tr>
+    <tr><td>1.0</td><td>0.6321</td><td>1.0000</td></tr>
+    <tr><td>2.0</td><td>0.8647</td><td>2.0000</td></tr>
+  </table>
+  <div class="callout" style="margin-top:12px;"><code>A = −exp(A_log)</code> → A&lt;0 → <code>Ā = e^(ΔA) ∈ (0,1)</code> → 재귀가 <b>수축</b> → 기울기 안정.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 6 숫자 -->
+<section class="slide">
+  <div class="kicker">3. 이산화</div>
+  <h2>숫자로 따라가기 — Δ가 만드는 차이</h2>
+  <p><code>A=−1, B=C=1, x=[1, 0, 2]</code></p>
+  <div class="grid2">
+    <div class="panel">
+      <div class="callout">Δ = 0.5 : Ā = 0.6065, B̄ = 0.5</div>
+      <table style="margin-top:8px;"><tr><th>t</th><th>x_t</th><th>h_t</th></tr>
+        <tr><td>1</td><td>1</td><td>0.5000</td></tr>
+        <tr><td>2</td><td>0</td><td>0.3033</td></tr>
+        <tr><td>3</td><td>2</td><td>1.1839</td></tr></table>
+    </div>
+    <div class="panel">
+      <div class="callout amber">Δ = 2.0 : Ā = 0.1353, B̄ = 2.0</div>
+      <table style="margin-top:8px;"><tr><th>t</th><th>x_t</th><th>h_t</th></tr>
+        <tr><td>1</td><td>1</td><td>2.0000</td></tr>
+        <tr><td>2</td><td>0</td><td>0.2707</td></tr>
+        <tr><td>3</td><td>2</td><td>4.0366</td></tr></table>
+    </div>
+  </div>
+  <div class="callout red" style="margin-top:14px;">같은 입력, t3이 <b>4.04 vs 1.18 (약 3.4배)</b> — Δ가 크면 현재 입력 강하게·과거 빠르게 잊음.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 7 재귀 vs 컨볼루션 -->
+<section class="slide">
+  <div class="kicker">4. 계산 방식</div>
+  <h2>같은 식, 두 가지 계산</h2>
+  <div class="grid2">
+    <div class="card"><h3>추론: 재귀(순차)</h3> $$ h_t = \bar A h_{t-1} + \bar B x_t $$ <p style="font-size:15px;margin:0;">앞에서 뒤로 하나씩 · O(L)</p></div>
+    <div class="card"><h3>학습: 컨볼루션(병렬)</h3> $$ y = x * K $$ <p style="font-size:15px;margin:0;">고정 커널이면 병렬 · O(L)</p></div>
+  </div>
+  <pre style="margin-top:14px;"><code>전개:  K = ( C B̄ ,  C Ā B̄ ,  C Ā² B̄ ,  ... )   # 고정 커널(LTI)</code></pre>
+  <div class="callout amber" style="margin-top:12px;">고정 커널은 재사용 가능하지만 “입력에 따라 선택”은 불가 → 다음 절(선택성).</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 8 커널 유도 -->
+<section class="slide">
+  <div class="kicker">4. 수식 ②</div>
+  <h2>재귀 → 컨볼루션 유도</h2>
+  $$ h_t = \sum_{s=1}^{t}\bar A^{\,t-s}\bar B\,x_s, \qquad y_t = \sum_{k=0}^{t-1}\underbrace{\big(C\bar A^{k}\bar B\big)}_{K_k} x_{t-k} = (K*x)_t $$
+  <p>Ā=0.6065, B̄=0.5, C=1, x=[1,0,2] 로 검산:</p>
+  <table>
+    <tr><th>커널</th><th>값</th><th>y_t 검산</th><th>결과</th></tr>
+    <tr><td>K₀ = C B̄</td><td>0.5000</td><td>y₁ = 0.5×1</td><td>0.5000</td></tr>
+    <tr><td>K₁ = C Ā B̄</td><td>0.3033</td><td>y₂ = 0 + 0.3033</td><td>0.3033</td></tr>
+    <tr><td>K₂ = C Ā² B̄</td><td>0.1839</td><td>y₃ = 1.0 + 0 + 0.1839</td><td>1.1839</td></tr>
+  </table>
+  <div class="callout" style="margin-top:12px;">앞 슬라이드의 순차 결과(0.5 / 0.3033 / 1.1839)와 정확히 일치.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 9 선택성 -->
+<section class="slide">
+  <div class="kicker">5. Mamba 핵심</div>
+  <h2>선택성 (Selective SSM)</h2>
+  <p>Δ,B,C를 <b>입력 x_t마다 다르게</b> 만든다 → “무엇을 기억/무시할지”를 입력이 결정.</p>
+  $$ \Delta_t = \mathrm{softplus}(\mathrm{Linear}_{\Delta}(x_t)), \quad B_t = \mathrm{Linear}_B(x_t), \quad C_t = \mathrm{Linear}_C(x_t) $$
+  $$ h_t = \bar A_t h_{t-1} + \bar B_t x_t, \qquad y_t = C_t h_t + D x_t $$
+  <div class="grid2" style="margin-top:8px;">
+    <div class="card teal"><h3>LTI(상수)</h3><p style="font-size:15px;margin:0;">커널 고정 → 합성곱 가능, <b>선택 불가</b></p></div>
+    <div class="card amber"><h3>Selective(입력 의존)</h3><p style="font-size:15px;margin:0;">커널이 매번 달라짐 → 합성곱 불가 → <b>병렬 스캔</b></p></div>
+  </div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 10 병렬 스캔 -->
+<section class="slide">
+  <div class="kicker">5. 수식 ③</div>
+  <h2>병렬 스캔 (associative scan)</h2>
+  $$ h_t = a_t h_{t-1} + b_t, \quad a_t = \bar A_t,\ b_t = \bar B_t x_t $$
+  $$ (a_2,b_2)\circ(a_1,b_1) = \big(a_2 a_1,\; a_2 b_1 + b_2\big) \quad\text{(결합법칙 성립)} $$
+  <p>수치 예: <code>a=[0.5,0.5,0.5]</code>, <code>b=[1,0,2]</code></p>
+  <table>
+    <tr><th>t</th><th>prefix (A_t, B_t)</th><th>h_t = B_t</th></tr>
+    <tr><td>1</td><td>(0.5000, 1.0000)</td><td>1.0000</td></tr>
+    <tr><td>2</td><td>(0.2500, 0.5000)</td><td>0.5000</td></tr>
+    <tr><td>3</td><td>(0.1250, 2.2500)</td><td>2.2500</td></tr>
+  </table>
+  <div class="callout" style="margin-top:12px;">결합법칙 → O(L) 작업을 <b>O(log L) 깊이</b>로 병렬화 (Blelloch / CPU는 <code>tf.scan</code>).</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 11 코드 PyTorch -->
+<section class="slide">
+  <div class="kicker">6. 코드</div>
+  <h2>PyTorch — 정답 오라클(순차 루프)</h2>
+  <pre><code>import torch, torch.nn.functional as F
+
+def selective_scan(u, delta, A, B, C, D=None):
+    # u, delta: (b, d, l)   A: (d, n)   B, C: (b, n, l)
+    b, d, l = u.shape; n = A.shape[1]
+    delta = F.softplus(delta)                 # Δ > 0
+    dA   = torch.exp(delta[..., None] * A)    # exp(ΔA) -> (b,d,l,n)
+    dB_u = (delta[..., None]
+            * B.transpose(1, 2)[:, None]
+            * u[..., None])
+    h = u.new_zeros((b, d, n)); ys = []
+    for t in range(l):
+        h = dA[:, :, t] * h + dB_u[:, :, t]   # h_t = Ā h_{t-1} + B̄ x_t
+        ys.append(torch.einsum("bdn,bn->bd", h, C[:, :, t]))
+    y = torch.stack(ys, dim=2)
+    return y + u * D.view(1, -1, 1) if D is not None else y</code></pre>
+  <div class="callout" style="margin-top:10px;">이 구현이 <b>정답 기준</b>. 다음 슬라이드의 병렬 버전과 수치 일치(허용오차 &lt; 1e-5)를 확인.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 12 코드 TF -->
+<section class="slide">
+  <div class="kicker">6. 코드</div>
+  <h2>TensorFlow — <code>tf.scan</code> 병렬화</h2>
+  <pre><code>import tensorflow as tf
+
+def selective_scan_tf(u, delta, A, B, C):
+    # u, delta: (b, l, d)   A: (d, n)   B, C: (b, l, n)
+    delta = tf.nn.softplus(delta)
+    dA  = tf.exp(delta[..., None] * A)                 # (b,l,d,n)
+    dBu = delta[..., None] * B[:, :, None, :] * u[..., None]
+
+    def step(h, xs):
+        dA_t, dBu_t, C_t = xs
+        h = dA_t * h + dBu_t
+        y = tf.reduce_sum(h * C_t[:, None, :], axis=-1)
+        return h, y
+
+    h0 = tf.zeros([tf.shape(u)[0], tf.shape(u)[2], A.shape[1]])
+    _, ys = tf.scan(step, (tf.transpose(dA, [1,0,2,3]),
+                           tf.transpose(dBu,[1,0,2,3]),
+                           tf.transpose(C,  [1,0,2])), initializer=h0)
+    return tf.transpose(ys, [1,0,2])</code></pre>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 13 하이퍼파라미터 -->
+<section class="slide">
+  <div class="kicker">6. 코드</div>
+  <h2>Mamba 하이퍼파라미터</h2>
+  <p><code>d_state = 16, d_conv = 4, expand = 2, dt_rank = ceil(d_model/16)</code></p>
+  <table>
+    <tr><th>d_model</th><th>d_inner (expand=2)</th><th>dt_rank</th><th>d_state</th><th>d_conv</th></tr>
+    <tr><td>128</td><td>256</td><td>8</td><td>16</td><td>4</td></tr>
+    <tr><td>256</td><td>512</td><td>16</td><td>16</td><td>4</td></tr>
+    <tr><td>768</td><td>1536</td><td>48</td><td>16</td><td>4</td></tr>
+  </table>
+  <div class="callout" style="margin-top:14px;"><b>안저 앱 계획 연결</b> — 이 파라미터를 그대로 써서 CPU 친화적 preset(tiny/small)을 구성한다.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 14 블록 -->
+<section class="slide">
+  <div class="kicker">7. 아키텍처</div>
+  <h2>Vision Mamba 블록 — ViT 블록과 1:1</h2>
+  <p>attention 자리에 <b>양방향 SSM</b>, MLP 자리에 <b>gating</b>.</p>
+  <div class="pipe" style="margin:18px 0;">
+    <div class="stage">Linear<br><small>in_proj</small></div><div class="arrow">→</div>
+    <div class="stage">Conv1d<br><small>지역</small></div><div class="arrow">→</div>
+    <div class="stage">SiLU</div><div class="arrow">→</div>
+    <div class="stage">SSM 스캔<br><small>Δ,B,C</small></div><div class="arrow">→</div>
+    <div class="stage">⊙ gate</div><div class="arrow">→</div>
+    <div class="stage">Linear<br><small>out_proj</small></div>
+  </div>
+  <div class="grid2">
+    <div class="card teal"><h3>Conv1d</h3><p style="font-size:15px;margin:0;">ViT에 없음 → 지역성 부여, 순서 의존성 완화</p></div>
+    <div class="card teal"><h3>⊙ gate (SiLU)</h3><p style="font-size:15px;margin:0;">MLP 대체 — 출력 통과량을 입력이 결정</p></div>
+  </div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 15 양방향 -->
+<section class="slide">
+  <div class="kicker">7. 아키텍처</div>
+  <h2>양방향 스캔 — 이미지는 순서가 없다</h2>
+  <p>한 방향 스캔은 패치 순서에 민감 → 정방향 + 역방향을 합친다.</p>
+  $$ y = \mathrm{SSM}_{\text{forward}}(x) + \mathrm{flip}\big(\mathrm{SSM}_{\text{backward}}(\mathrm{flip}(x))\big) $$
+  <div class="grid2" style="margin-top:14px;">
+    <div class="card teal" style="text-align:center;">정방향 SSM →</div>
+    <div class="card amber" style="text-align:center;">← 역방향 SSM</div>
+  </div>
+  <div class="callout" style="margin-top:14px;">ViT는 순열 불변(방향 없음), SSM은 방향 의존 → 양방향이 필수.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 16 비용 -->
+<section class="slide">
+  <div class="kicker">8. 비용</div>
+  <h2>비용 비교 — 실제 숫자</h2>
+  <p>d_model=768, 토큰 L개, <b>대략적</b> MAC 기준.</p>
+  <table>
+    <tr><th>L</th><th>해상도</th><th>Attention ≈ 2L²D</th><th>SSM scan ≈ 3·L·d_inner·N</th><th>배수</th></tr>
+    <tr><td>197</td><td>224²</td><td>59.6M</td><td>14.5M</td><td>4.1×</td></tr>
+    <tr><td>784</td><td>448²</td><td>944.1M</td><td>57.8M</td><td>16.3×</td></tr>
+  </table>
+  <div class="callout" style="margin-top:14px;">Vim 논문: 1248×1248 배치 추론에서 DeiT 대비 약 <b>2.8배 빠르고 GPU 메모리 약 86.8% 절감</b>.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 17 대응표 -->
+<section class="slide">
+  <div class="kicker">9. 정리</div>
+  <h2>ViT ↔ Vision Mamba</h2>
+  <table>
+    <tr><th></th><th>ViT</th><th>Vision Mamba</th></tr>
+    <tr><td>패치 임베딩</td><td>있음</td><td>동일</td></tr>
+    <tr><td>위치 임베딩</td><td>있음</td><td>동일 (+ Conv1d)</td></tr>
+    <tr><td>전역 상호작용</td><td>Self-Attention</td><td>양방향 SSM 순차 스캔</td></tr>
+    <tr><td>복잡도</td><td>O(L²)</td><td><b>O(L)</b></td></tr>
+    <tr><td>방향성</td><td>없음(순열 불변)</td><td>있음 → 양방향</td></tr>
+    <tr><td>선택성</td><td>softmax 가중치</td><td>입력 의존 Δ,B,C</td></tr>
+    <tr><td>학습 병렬화</td><td>행렬곱</td><td>병렬 스캔</td></tr>
+  </table>
+  <div class="callout amber" style="margin-top:12px;"><b>주의</b>: SSM의 “전역”은 상태(N)로 압축 전달 → 정보 병목 존재. 매우 긴 문맥의 세부 기억은 attention이 유리할 수 있다.</div>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+<!-- 18 프로젝트 + refs -->
+<section class="slide">
+  <div class="kicker">10. 연결</div>
+  <h2>안저 AI 프로젝트와 연결 · 참고</h2>
+  <ul>
+    <li>SSM은 선형·커널 무관 → <b>순수 TF 연산으로 CPU 구현</b> 가능 → TFLite 배포 유리.</li>
+    <li>안저/의료영상은 <b>CNN + Mamba 하이브리드</b>가 강세: MedMamba, StageMamba, LEMUR.</li>
+    <li><code>app/PLAN-keras-tensorflow.md</code> 전략 A = Keras 커스텀 SSM 레이어.</li>
+  </ul>
+  <p class="muted" style="font-size:15px;margin-top:12px;">
+    참고: Vision Mamba (ICML 2024, arXiv:2401.09417) · MedMamba (arXiv:2403.03849) · VMamba · LEMUR.
+  </p>
+  <div class="pg"></div><div class="brand">Vision Mamba</div>
+</section>
+
+</div>
+<script>
+  const only=new URLSearchParams(location.search).get('only');
+  if(only){
+    const slides=[...document.querySelectorAll('.slide')], k=Number(only)-1;
+    slides.forEach((s,i)=>{ if(i!==k) s.remove(); });
+    document.documentElement.style.background='#fff'; document.body.style.background='#fff';
+    const deck=document.querySelector('.deck'); deck.style.padding='0'; deck.style.gap='0';
+    if(slides[k]) slides[k].style.boxShadow='none';
+  }
+</script>
+</body>
+</html>
