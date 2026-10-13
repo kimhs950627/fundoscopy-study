@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vision Mamba 쉽게 이해하기 (애니메이션)</title>
+<style>
+  :root{
+    --bg:#0b1220; --bg2:#111c30; --card:#16233a; --line:#26374f;
+    --ink:#e8eef7; --muted:#93a4bd; --teal:#2fd4d4; --teal2:#0e7c86;
+    --amber:#ffb74d; --red:#ff6b6b; --blue:#5aa9ff; --violet:#b98cff;
+    --green:#5ddc8f;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:linear-gradient(180deg,#0b1220,#0a0f1a 60%);color:var(--ink);
+    font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo",system-ui,"Segoe UI",Roboto,sans-serif;
+    line-height:1.7;}
+  header{padding:70px 24px 40px;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid var(--line);}
+  header h1{font-size:40px;margin:0 0 12px;}
+  header .sub{color:var(--muted);font-size:18px;}
+  .dot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--teal);opacity:.25;animation:float 9s linear infinite;}
+  @keyframes float{from{transform:translateY(0)}to{transform:translateY(-120px);opacity:0}}
+  main{max-width:1000px;margin:0 auto;padding:24px;}
+  section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 26px 30px;margin:26px 0;}
+  h2{font-size:26px;margin:0 0 6px;color:var(--teal);}
+  .num{display:inline-block;background:var(--teal2);color:#fff;border-radius:8px;padding:2px 10px;font-size:15px;margin-right:10px;vertical-align:middle;}
+  h3{font-size:19px;margin:18px 0 8px;}
+  p{margin:8px 0;}
+  .muted{color:var(--muted);}
+  code{background:#0d1728;border:1px solid var(--line);border-radius:6px;padding:2px 6px;font-size:14px;color:#cfe8e8;}
+  pre{background:#0d1728;border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto;font-size:14.5px;}
+  pre code{background:none;border:none;padding:0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  @media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+  .panel{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:14px;}
+  .pill{display:inline-block;border-radius:999px;padding:2px 10px;font-size:13px;font-weight:700;}
+  .pill.vit{background:#3a2a12;color:var(--amber);}
+  .pill.mamba{background:#0e3b3b;color:var(--teal);}
+  table{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:#1d2c44;color:#cfe0f5;}
+  .kbd{border:1px solid var(--line);border-bottom-width:3px;border-radius:6px;padding:1px 7px;background:#0d1728;font-size:13px;}
+  .ctrl{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px;}
+  button{background:var(--teal2);color:#fff;border:none;border-radius:9px;padding:8px 14px;font-size:14.5px;cursor:pointer;font-weight:700;}
+  button.ghost{background:#1d2c44;color:#cfe0f5;border:1px solid var(--line);}
+  button:active{transform:translateY(1px);}
+  input[type=range]{width:190px}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* 1 attention matrix */
+  .matrix{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;max-width:360px;margin:0 auto;}
+  .cell{aspect-ratio:1;border-radius:5px;background:#1b2a42;transition:background .3s,box-shadow .3s;}
+  .in .cell.on{background:var(--amber);box-shadow:0 0 10px rgba(255,183,77,.6);}
+  .scanrow{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;max-width:560px;margin:0 auto;}
+  .tok{aspect-ratio:1;border-radius:8px;background:#1b2a42;display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--muted);border:1px solid var(--line);transition:all .25s;}
+  .tok.active{background:var(--teal);color:#04222a;border-color:var(--teal);box-shadow:0 0 14px rgba(47,212,212,.7);}
+  .tok.done{background:#20404a;color:#bff0f0;border-color:#2f6a70;}
+  .statebar{height:16px;background:#1b2a42;border-radius:8px;overflow:hidden;border:1px solid var(--line);margin-top:12px;}
+  .statebar > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal2),var(--teal));transition:width .25s;}
+  .readout{font-family:ui-monospace,monospace;color:var(--teal);font-size:15px;margin-top:8px;}
+
+  .bar{height:26px;border-radius:7px;display:flex;align-items:center;padding-left:10px;color:#04222a;font-weight:700;font-size:14px;width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1);}
+  .bar.lin{background:linear-gradient(90deg,#1f8f8f,var(--teal));}
+  .bar.quad{background:linear-gradient(90deg,#8f4d1f,var(--amber));}
+
+  .pipe{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:16px 0;}
+  .stage{background:#1b2a42;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px;text-align:center;min-width:96px;transition:all .3s;}
+  .stage.hot{background:var(--teal);color:#04222a;border-color:var(--teal);box-shadow:0 0 16px rgba(47,212,212,.6);}
+  .arrow{color:var(--teal);font-size:20px;}
+
+  .bidir{max-width:620px;margin:0 auto;}
+  .bfwd,.bbwd{height:6px;border-radius:6px;position:relative;margin:10px 0;}
+  .bfwd{background:linear-gradient(90deg,#20404a,#20404a);}
+  .bfwd>i,.bbwd>i{position:absolute;top:-5px;width:16px;height:16px;border-radius:50%;}
+  .bfwd>i{background:var(--blue);animation:slideR 4s linear infinite;}
+  .bbwd>i{background:var(--violet);animation:slideL 4s linear infinite;}
+  @keyframes slideR{from{left:0}to{left:calc(100% - 16px)}}
+  @keyframes slideL{from{left:calc(100% - 16px)}to{left:0}}
+
+  .callout{border-left:5px solid var(--teal);background:#0e2230;padding:12px 16px;border-radius:0 10px 10px 0;margin-top:14px;}
+  .callout.warn{border-color:var(--amber);background:#241d10;}
+  footer{color:var(--muted);text-align:center;padding:40px 20px 70px;font-size:14px;}
+  .legend{font-size:13.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header id="top">
+  <h1>Vision Mamba, 쉽게 이해하기</h1>
+  <div class="sub">ViT를 아는 사람을 위한 애니메이션 설명 · Attention(느린 전역) → SSM(빠른 전역)</div>
+  <div class="sub" style="margin-top:14px;">
+    <span class="pill vit">ViT: O(L²)</span>
+    <span style="margin:0 6px">→</span>
+    <span class="pill mamba">Mamba: O(L)</span>
+  </div>
+</header>
+
+<main>
+
+<section class="reveal">
+  <h2><span class="num">0</span>한 줄 요약</h2>
+  <p class="muted">Attention이 “모든 토큰을 매번 전부 조회”라면, Vision Mamba는 <b>입력이 조절하는 요약 메모리(상태)를 양방향으로 순차 갱신</b>해서 O(L)로 같은 전역 문맥을 얻습니다.</p>
+  <div class="callout">스크롤하면 각 개념이 애니메이션으로 나타납니다. <span class="kbd">슬라이더</span>와 <span class="kbd">버튼</span>으로 직접 조작해 보세요.</div>
+</section>
+
+<section class="reveal" id="s1">
+  <h2><span class="num">1</span>ViT 복습 — 왜 바꾸려는가</h2>
+  <p>ViT는 이미지를 패치로 쪼개 토큰 <code>x₁…x_L</code> 로 만들고, attention으로 <b>모든 토큰 쌍</b>을 비교합니다. L이 커지면 연산·메모리가 <b>L²</b>로 폭증합니다.</p>
+  <pre><code>Attention(Q,K,V) = softmax(QKᵀ/√d) V     # 모든 쌍 비교
+복잡도 = O(L² · D)</code></pre>
+  <h3>모든 쌍을 비교한다는 것 (아래 격자가 전부 켜지는가?)</h3>
+  <div class="panel">
+    <div class="matrix" id="matrix"></div>
+    <p class="legend" style="text-align:center;margin-top:10px;">8×8 = 64칸 = L². 토큰 8개를 전부 비교하면 64번. L=100이면 10,000번.</p>
+  </div>
+</section>
+
+<section class="reveal" id="s2">
+  <h2><span class="num">2</span>출발점 — 상태공간모델(SSM)</h2>
+  <pre><code>h'(t) = A · h(t) + B · x(t)     ← 상태(메모리) 갱신
+y(t)  = C · h(t) + D · x(t)     ← 상태에서 출력 읽기</code></pre>
+  <div class="grid2">
+    <div class="panel">
+      <table>
+        <tr><th>기호</th><th>의미</th></tr>
+        <tr><td><code>h</code></td><td><b>은닉 상태 = 지금까지 본 정보의 압축 메모리</b></td></tr>
+        <tr><td><code>A</code></td><td>상태 전이 (과거를 다음으로 넘김)</td></tr>
+        <tr><td><code>B</code></td><td>입력 주입 (새 토큰 반영)</td></tr>
+        <tr><td><code>C</code></td><td>출력 읽기 (상태에서 꺼냄)</td></tr>
+        <tr><td><code>D</code></td><td>지름길(skip)</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <h3 style="margin-top:0">토큰을 순서대로 “메모리에 적기”</h3>
+      <div class="scanrow" id="scanrow"></div>
+      <div class="statebar"><i id="statefill"></i></div>
+      <div class="readout" id="stateval">상태 h = 0.00</div>
+      <p class="legend">토큰 하나씩 읽으며 상태를 갱신합니다. <b>전부 저장하지 않고 요약</b>하므로 O(L).</p>
+    </div>
+  </div>
+</section>
+
+<section class="reveal" id="s3">
+  <h2><span class="num">3</span>이산화와 Δ — 얼마나 기억할까</h2>
+  <pre><code>Ā = exp(Δ · A)                 # 상태가 남는 정도
+B̄ = Δ · B                      # 입력을 받는 정도
+h_t = Ā · h_{t-1} + B̄ · x_t
+y_t = C · h_t</code></pre>
+  <p><b>Δ(스텝)를 조절</b>하면 “과거 상태를 유지” ↔ “현재 입력을 반영” 이 서로 맞바뀝니다. 슬라이더를 움직여 보세요.</p>
+  <div class="panel">
+    <div class="ctrl"><span>Δ = <b id="dv">1.00</b></span><input type="range" id="delta" min="0.1" max="4" step="0.1" value="1"></div>
+    <div style="margin-top:12px">
+      <div class="legend">과거 상태 유지 (Ā = e^(−Δ))</div>
+      <div class="statebar" style="height:14px"><i id="keepbar" style="width:0"></i></div>
+      <div class="legend" style="margin-top:10px">현재 입력 반영 (B̄ ∝ Δ)</div>
+      <div class="statebar" style="height:14px"><i id="nowbar" style="width:0;background:linear-gradient(90deg,#8f4d1f,var(--amber))"></i></div>
+    </div>
+    <p class="legend">Δ가 크면 → 현재 입력을 강하게 반영(과거는 잊음). Δ가 작으면 → 상태를 오래 유지.</p>
+  </div>
+</section>
+
+<section class="reveal" id="s4">
+  <h2><span class="num">4</span>재귀 vs 컨볼루션 — 같은 식, 두 가지 계산</h2>
+  <p>SSM은 같은 수식을 두 방식으로 계산합니다. 토글을 눌러 비교하세요.</p>
+  <div class="ctrl">
+    <button id="btnRec">추론: 재귀(순차)</button>
+    <button id="btnConv" class="ghost">학습: 컨볼루션(병렬)</button>
+  </div>
+  <div class="panel" style="margin-top:12px">
+    <div class="scanrow" id="modeRow"></div>
+    <div class="readout" id="modeNote">재귀: 앞에서 뒤로 하나씩 (O(L))</div>
+  </div>
+  <pre><code>재귀:  h_t = Ā h_{t-1} + B̄ x_t
+전개:  y = x * K ,  K = (C B̄, C Ā B̄, C Ā² B̄, ...)   # 고정 커널이면 병렬!</code></pre>
+</section>
+
+<section class="reveal" id="s5">
+  <h2><span class="num">5</span>Mamba의 핵심 — 선택성(Selective)</h2>
+  <p>위의 <code>Ā,B̄,C</code>가 상수면 병렬화되지만 “입력에 따라 선택”을 못 합니다. Mamba는 이들을 <b>입력 x_t마다 다르게</b> 만듭니다.</p>
+  <pre><code>Δ_t = softplus(Linear_Δ(x_t))
+B_t = Linear_B(x_t)
+C_t = Linear_C(x_t)          # 입력이 “무엇을 기억/무시할지” 결정</code></pre>
+  <div class="panel">
+    <div class="ctrl">
+      <span>입력 토큰 x =</span>
+      <input type="range" id="xin" min="0" max="3" step="1" value="1">
+      <b id="xval" style="color:var(--teal)">1</b>
+    </div>
+    <div class="grid3" style="margin-top:14px">
+      <div class="panel" style="background:#0e3b3b"><div class="legend">Δ (기억 vs 반영)</div><div class="readout" id="gD">–</div></div>
+      <div class="panel" style="background:#0e3b3b"><div class="legend">B (입력 주입)</div><div class="readout" id="gB">–</div></div>
+      <div class="panel" style="background:#0e3b3b"><div class="legend">C (출력 읽기)</div><div class="readout" id="gC">–</div></div>
+    </div>
+    <p class="legend">입력이 바뀌면 게이트(Δ,B,C)가 바뀝니다 → 정적 컨볼루션으로는 불가능 → <b>병렬 스캔</b>으로 O(L) 구현.</p>
+  </div>
+</section>
+
+<section class="reveal" id="s6">
+  <h2><span class="num">6</span>Vision Mamba 블록 — ViT 블록과 1:1 대응</h2>
+  <p>ViT의 <b>attention 자리에 양방향 SSM</b>, MLP 자리에 <b>gating</b>이 들어갑니다. 토큰이 파이프라인을 지나갑니다.</p>
+  <div class="panel">
+    <div class="pipe" id="pipe">
+      <div class="stage" data-s="0">Linear<br><small>in_proj</small></div>
+      <div class="arrow">→</div>
+      <div class="stage" data-s="1">Conv1d<br><small>지역 특징</small></div>
+      <div class="arrow">→</div>
+      <div class="stage" data-s="2">SiLU</div>
+      <div class="arrow">→</div>
+      <div class="stage" data-s="3">SSM 스캔<br><small>Δ,B,C</small></div>
+      <div class="arrow">→</div>
+      <div class="stage" data-s="4">⊙ gate</div>
+      <div class="arrow">→</div>
+      <div class="stage" data-s="5">Linear<br><small>out_proj</small></div>
+    </div>
+    <p class="legend" style="text-align:center">Conv1d는 ViT에 없는 부분 → 시각 데이터의 <b>지역성</b>을 먼저 섞어 순서 의존성을 완화.</p>
+  </div>
+</section>
+
+<section class="reveal" id="s7">
+  <h2><span class="num">7</span>양방향 스캔 — 이미지는 순서가 없다</h2>
+  <p>NLP와 달리 이미지는 고정된 순서가 없어서, 한 방향으로만 스캔하면 결과가 패치 순서에 민감합니다. <b>정방향 + 역방향</b>을 합칩니다.</p>
+  <div class="panel bidir">
+    <div class="legend">정방향 SSM →</div>
+    <div class="bfwd"><i></i></div>
+    <div class="legend">← 역방향 SSM</div>
+    <div class="bbwd"><i></i></div>
+    <p class="legend">y = SSM_forward(x) + 뒤집기(SSM_backward(뒤집기(x)))</p>
+  </div>
+</section>
+
+<section class="reveal" id="s8">
+  <h2><span class="num">8</span>복잡도 — 왜 빠른가</h2>
+  <div class="panel">
+    <div class="legend" style="margin-bottom:6px">Attention (L²)</div>
+    <div class="bar quad" id="qbar"></div>
+    <div class="legend" style="margin:12px 0 6px">SSM (L)</div>
+    <div class="bar lin" id="lbar"></div>
+    <p class="legend">L이 커질수록 격차가 급격히 벌어집니다. Vim 논문: 1248×1248 배치 추론에서 DeiT 대비 약 2.8배 빠르고 GPU 메모리 약 86.8% 절감.</p>
+  </div>
+</section>
+
+<section class="reveal" id="s9">
+  <h2><span class="num">9</span>정리 — ViT ↔ Vision Mamba</h2>
+  <table>
+    <tr><th></th><th>ViT</th><th>Vision Mamba</th></tr>
+    <tr><td>패치 임베딩</td><td>있음</td><td>동일</td></tr>
+    <tr><td>위치 임베딩</td><td>있음</td><td>동일 (+ Conv1d)</td></tr>
+    <tr><td>전역 상호작용</td><td>Self-Attention</td><td>양방향 SSM 순차 스캔</td></tr>
+    <tr><td>복잡도</td><td>O(L²)</td><td><b>O(L)</b></td></tr>
+    <tr><td>방향성</td><td>없음(순열 불변)</td><td>있음 → 양방향으로 보완</td></tr>
+    <tr><td>선택성</td><td>softmax 가중치</td><td>입력 의존 Δ,B,C</td></tr>
+    <tr><td>학습 병렬화</td><td>행렬곱</td><td>병렬 스캔</td></tr>
+  </table>
+  <div class="callout warn">
+    <b>주의</b>: SSM의 “전역”은 attention과 다릅니다. 상태(차원 N)로 압축해 전달하므로 정보 병목이 있고, 매우 긴 문맥의 세부 기억은 attention이 유리할 수 있습니다.
+  </div>
+</section>
+
+<section class="reveal" id="s10">
+  <h2><span class="num">10</span>우리 프로젝트(안저 AI)와 연결</h2>
+  <ul>
+    <li>SSM은 <b>선형</b>이고 커널 의존이 없어 <b>순수 TF/NumPy 연산으로 CPU 구현</b> 가능 → TFLite 배포에 유리.</li>
+    <li>안저/의료영상은 최근 <b>CNN + Mamba 하이브리드</b>가 강세: MedMamba, StageMamba, LEMUR(RETFound→VMamba 증류).</li>
+    <li>그래서 <code>app/PLAN-keras-tensorflow.md</code>에서 SSM(전략 A)을 <b>Keras 커스텀 레이어</b>로 직접 구현하는 계획을 세웠습니다.</li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  fundoscopy-study · Vision Mamba 애니메이션 학습자료 · v0.1<br>
+  의료진 학습용 자료입니다. 출처: Vision Mamba(ICML 2024), MedMamba(arXiv:2403.03849).
+</footer>
+
+<script>
+(function(){
+  // floating dots
+  for(let i=0;i<18;i++){
+    const d=document.createElement('div');d.className='dot';
+    d.style.left=(Math.random()*100)+'%';d.style.top=(60+Math.random()*40)+'%';
+    d.style.animationDelay=(Math.random()*9)+'s';
+    document.querySelector('header').appendChild(d);
+  }
+
+  const onVisible=(el,cb)=>{
+    const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');cb&&cb();}});},{threshold:.3});
+    io.observe(el);
+  };
+
+  // 1) attention matrix LxL
+  const mx=document.getElementById('matrix');
+  for(let r=0;r<8;r++)for(let c=0;c<8;c++){
+    const cc=document.createElement('div');cc.className='cell';cc.dataset.r=r;cc.dataset.c=c;mx.appendChild(cc);
+  }
+  onVisible(document.getElementById('s1'),()=>{
+    mx.querySelectorAll('.cell').forEach((el,i)=>{
+      setTimeout(()=>el.classList.add('on'), (Number(el.dataset.r)+Number(el.dataset.c))*55 + i*3);
+    });
+  });
+
+  // 2) sequential scan with state
+  const row=document.getElementById('scanrow');
+  const inputs=[1,.8,1.2,.5,1.1,.3,.9,1.4];
+  inputs.forEach((v,i)=>{const t=document.createElement('div');t.className='tok';t.textContent='x'+(i+1);row.appendChild(t);});
+  const toks=[...row.children];
+  const fill=document.getElementById('statefill'), sval=document.getElementById('stateval');
+  let si=0, state=0;
+  function scanStep(){
+    toks.forEach(t=>t.classList.remove('active'));
+    const t=toks[si]; t.classList.add('active');
+    state = 0.75*state + inputs[si];
+    fill.style.width=Math.min(100,state*22)+'%';
+    sval.textContent='상태 h = '+state.toFixed(2)+'   (x'+(si+1)+' 처리)';
+    setTimeout(()=>t.classList.add('done'),260);
+    si=(si+1)%8;
+    if(si===0){setTimeout(()=>{state=0;toks.forEach(x=>x.classList.remove('done'));},700);}
+  }
+  onVisible(document.getElementById('s2'),()=>{ setInterval(scanStep,650); },);
+
+  // 3) delta slider
+  const ds=document.getElementById('delta'), dv=document.getElementById('dv'),
+        keep=document.getElementById('keepbar'), now=document.getElementById('nowbar');
+  function updDelta(){
+    const d=parseFloat(ds.value); dv.textContent=d.toFixed(2);
+    const keepv=Math.exp(-d);           // A-bar magnitude
+    keep.style.width=Math.round(keepv*100)+'%';
+    now.style.width=Math.round(Math.min(1,d/4)*100)+'%';
+  }
+  ds.addEventListener('input',updDelta); updDelta();
+
+  // 4) recursion vs convolution
+  const mrow=document.getElementById('modeRow'), mnote=document.getElementById('modeNote');
+  for(let i=0;i<8;i++){const t=document.createElement('div');t.className='tok';t.textContent='x'+(i+1);mrow.appendChild(t);}
+  const mtoks=[...mrow.children];
+  let recTimer=null, convTimer=null;
+  function clearRec(){clearInterval(recTimer);recTimer=null;}
+  function clearConv(){clearInterval(convTimer);convTimer=null;}
+  function playRec(){
+    clearConv();clearRec(); mtoks.forEach(t=>t.classList.remove('done','active'));
+    mnote.textContent='재귀: 앞에서 뒤로 하나씩 처리 (O(L), 순차)';
+    let i=0;
+    recTimer=setInterval(()=>{
+      mtoks.forEach(t=>t.classList.remove('active'));
+      if(i>=mtoks.length){clearRec();return;}
+      mtoks[i].classList.add('active');
+      setTimeout(()=>mtoks[i].classList.add('done'),200);
+      i++;
+    },420);
+  }
+  function playConv(){
+    clearRec();clearConv(); mtoks.forEach(t=>t.classList.remove('done','active'));
+    mnote.textContent='컨볼루션: 커널을 모든 위치에 동시에 적용 (병렬, O(L))';
+    mtoks.forEach((t,i)=>{setTimeout(()=>{t.classList.add('active');setTimeout(()=>{t.classList.add('done');t.classList.remove('active');},300);},i*60);});
+  }
+  document.getElementById('btnRec').addEventListener('click',playRec);
+  document.getElementById('btnConv').addEventListener('click',playConv);
+  onVisible(document.getElementById('s4'),playRec);
+
+  // 5) selective gates
+  const xin=document.getElementById('xin'), xval=document.getElementById('xval'),
+        gD=document.getElementById('gD'), gB=document.getElementById('gB'), gC=document.getElementById('gC');
+  function updGates(){
+    const x=Number(xin.value); xval.textContent=x;
+    const D=0.2+0.7*x/3, B=0.15+0.6*((x%2)?1:0.3)+0.1*x/3, C=0.25+0.5*((x>=2)?1:0.25);
+    gD.textContent=D.toFixed(2); gB.textContent=B.toFixed(2); gC.textContent=C.toFixed(2);
+  }
+  xin.addEventListener('input',updGates); updGates();
+
+  // 6) pipeline animation
+  const stages=[...document.querySelectorAll('#pipe .stage')];
+  let pi=0;
+  function pipeStep(){
+    stages.forEach(s=>s.classList.remove('hot'));
+    stages[pi].classList.add('hot'); pi=(pi+1)%stages.length;
+  }
+  onVisible(document.getElementById('s6'),()=>setInterval(pipeStep,520));
+
+  // 8) complexity bars
+  onVisible(document.getElementById('s8'),()=>{
+    document.getElementById('qbar').style.width='100%';
+    document.getElementById('qbar').textContent='L²  (100 → 10,000)';
+    document.getElementById('lbar').style.width='18%';
+    document.getElementById('lbar').textContent='L  (100)';
+  });
+})();
+</script>
+</body>
+</html>
