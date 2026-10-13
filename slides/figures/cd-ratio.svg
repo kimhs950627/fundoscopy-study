@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" font-family="Malgun Gothic, Apple SD Gothic Neo, sans-serif">
+  <rect width="720" height="400" fill="#ffffff"/>
+
+  <!-- normal disc -->
+  <g>
+    <circle cx="190" cy="185" r="95" fill="#f2d79b" stroke="#b3742a" stroke-width="2"/>
+    <circle cx="190" cy="185" r="31" fill="#fbf3d8" stroke="#b3742a" stroke-width="2"/>
+    <text x="190" y="60" text-anchor="middle" font-size="18" font-weight="bold" fill="#0e7c86">정상</text>
+    <text x="190" y="320" text-anchor="middle" font-size="15" fill="#22303f">C/D ≈ 0.3</text>
+    <text x="190" y="342" text-anchor="middle" font-size="12.5" fill="#5b6b82">테두리(rim) 두껍고 균일</text>
+    <!-- measurement -->
+    <line x1="95" y1="185" x2="285" y2="185" stroke="#1565c0" stroke-width="1.4" stroke-dasharray="4 3"/>
+    <line x1="159" y1="185" x2="221" y2="185" stroke="#c62828" stroke-width="1.6"/>
+    <text x="190" y="382" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#c62828">내부 흰 원 = 컵(cup)</text>
+  </g>
+
+  <!-- glaucomatous disc -->
+  <g>
+    <circle cx="520" cy="185" r="95" fill="#f2d79b" stroke="#b3742a" stroke-width="2"/>
+    <circle cx="520" cy="185" r="76" fill="#fbf3d8" stroke="#b3742a" stroke-width="2"/>
+    <text x="520" y="60" text-anchor="middle" font-size="18" font-weight="bold" fill="#c62828">녹내장 의심</text>
+    <text x="520" y="320" text-anchor="middle" font-size="15" fill="#22303f">C/D ≈ 0.8</text>
+    <text x="520" y="342" text-anchor="middle" font-size="12.5" fill="#5b6b82">테두리 얇고 패임(notching)</text>
+    <!-- notching mark inferior -->
+    <path d="M470 250 q50 22 100 0" fill="none" stroke="#c62828" stroke-width="3"/>
+    <text x="520" y="292" text-anchor="middle" font-size="12.5" font-weight="bold" fill="#c62828">아래쪽 테두리 소실</text>
+  </g>
+
+  <line x1="360" y1="20" x2="360" y2="380" stroke="#e2e8f0"/>
+</svg>

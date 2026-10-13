@@ -1,0 +1,17 @@
+# regenerable slide preview screenshots
+slides/shot_*.png
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# app artifacts
+app/checkpoints/
+app/notebooks/.ipynb_checkpoints/
+
+# misc
+uploads/
+tmp/
+.DS_Store

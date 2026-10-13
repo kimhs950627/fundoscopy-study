@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" font-family="Malgun Gothic, Apple SD Gothic Neo, sans-serif">
+  <rect width="720" height="400" fill="#ffffff"/>
+
+  <circle cx="300" cy="200" r="150" fill="#f7ecd0"/>
+  <circle cx="300" cy="200" r="62" fill="#ffffff" stroke="#c9b489" stroke-width="2"/>
+  <text x="300" y="205" text-anchor="middle" font-size="13" fill="#5b6b82">컵</text>
+
+  <!-- rim arcs, thickness I > S > N > T -->
+  <path d="M222.2 122.2 A110 110 0 0 1 377.8 122.2" fill="none" stroke="#1565c0" stroke-width="22" stroke-linecap="round"/>
+  <path d="M377.8 122.2 A110 110 0 0 1 377.8 277.8" fill="none" stroke="#e08a00" stroke-width="9" stroke-linecap="round"/>
+  <path d="M377.8 277.8 A110 110 0 0 1 222.2 277.8" fill="none" stroke="#0e7c86" stroke-width="30" stroke-linecap="round"/>
+  <path d="M222.2 277.8 A110 110 0 0 1 222.2 122.2" fill="none" stroke="#6a1b9a" stroke-width="15" stroke-linecap="round"/>
+
+  <g font-size="14" font-weight="bold">
+    <text x="300" y="52" text-anchor="middle" fill="#1565c0">S 상측</text>
+    <text x="300" y="372" text-anchor="middle" fill="#0e7c86">I 하측 (가장 두꺼움)</text>
+    <text x="70" y="205" text-anchor="middle" fill="#6a1b9a">N 비측</text>
+    <text x="540" y="205" text-anchor="middle" fill="#e08a00">T 이측 (가장 얇음)</text>
+  </g>
+
+  <line x1="600" y1="20" x2="600" y2="380" stroke="#e2e8f0"/>
+
+  <g font-size="15" fill="#22303f">
+    <text x="624" y="70" font-weight="bold" fill="#0e7c86">ISNT rule</text>
+    <text x="624" y="100">테두리 두께 순서:</text>
+    <text x="624" y="128" font-weight="bold" font-size="20" fill="#c62828">I &gt; S &gt; N &gt; T</text>
+    <text x="624" y="166">정상은 아래(I)가 가장</text>
+    <text x="624" y="188">두껍고 이측(T)이 가장 얇음</text>
+    <text x="624" y="228" font-weight="bold" fill="#c62828">이 순서를 위반하면</text>
+    <text x="624" y="250" font-weight="bold" fill="#c62828">→ 녹내장 의심</text>
+    <text x="624" y="292" fill="#5b6b82" font-size="13">테두리(rim) = 유두 전체 − 컵</text>
+    <text x="624" y="312" fill="#5b6b82" font-size="13">테두리 소실/패임이 핵심</text>
+  </g>
+</svg>

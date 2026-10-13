@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" font-family="Malgun Gothic, Apple SD Gothic Neo, sans-serif">
+  <rect width="720" height="400" fill="#ffffff"/>
+
+  <!-- ophthalmoscope + beam -->
+  <g>
+    <rect x="20" y="150" width="34" height="90" rx="10" fill="#2b3a4b"/>
+    <circle cx="37" cy="150" r="16" fill="#2b3a4b"/>
+    <path d="M54 150 L300 120 L300 230 Z" fill="#ffe9b8" opacity="0.55" stroke="#e0b25a" stroke-dasharray="5 5"/>
+  </g>
+  <ellipse cx="330" cy="175" rx="60" ry="72" fill="#f2f5f8" stroke="#b9c4d0" stroke-width="2"/>
+  <circle cx="330" cy="175" r="34" fill="#e0402c"/>
+  <text x="330" y="72" text-anchor="middle" font-size="14" font-weight="bold" fill="#22303f">검사법</text>
+  <text x="330" y="92" text-anchor="middle" font-size="12" fill="#5b6b82">약 60cm에서 빛을 눈에 비추면</text>
+  <text x="330" y="110" text-anchor="middle" font-size="12" fill="#5b6b82">망막에서 반사된 붉은 빛이 보임</text>
+
+  <!-- four pupils -->
+  <g>
+    <!-- normal -->
+    <ellipse cx="480" cy="190" rx="46" ry="54" fill="#f2f5f8" stroke="#b9c4d0" stroke-width="2"/>
+    <circle cx="480" cy="190" r="26" fill="#e0402c"/>
+    <text x="480" y="142" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#0e7c86">정상</text>
+    <text x="480" y="268" text-anchor="middle" font-size="12" fill="#22303f">주황-적색 반사</text>
+
+    <!-- cataract -->
+    <ellipse cx="600" cy="190" rx="46" ry="54" fill="#f2f5f8" stroke="#b9c4d0" stroke-width="2"/>
+    <circle cx="600" cy="190" r="26" fill="#d9c7a8"/>
+    <circle cx="600" cy="190" r="26" fill="#c9b489" opacity="0.7"/>
+    <text x="600" y="142" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#b26a00">이상①</text>
+    <text x="600" y="268" text-anchor="middle" font-size="12" fill="#22303f">백내장: 회백색/탁함</text>
+  </g>
+
+  <!-- second row -->
+  <g>
+    <ellipse cx="480" cy="330" rx="46" ry="54" fill="#f2f5f8" stroke="#b9c4d0" stroke-width="2"/>
+    <circle cx="480" cy="330" r="26" fill="#4a4a4a"/>
+    <text x="480" y="286" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#8b1a1a">이상②</text>
+    <text x="480" y="398" text-anchor="middle" font-size="12" fill="#22303f">유리체출혈: 반사 소실/검붉음</text>
+
+    <ellipse cx="600" cy="330" rx="46" ry="54" fill="#f2f5f8" stroke="#b9c4d0" stroke-width="2"/>
+    <circle cx="600" cy="330" r="26" fill="#fbfbf5" stroke="#cfcfcf"/>
+    <text x="600" y="286" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#8b1a1a">이상③</text>
+    <text x="600" y="398" text-anchor="middle" font-size="12" fill="#22303f">백색동공(leukocoria)</text>
+  </g>
+
+  <line x1="440" y1="20" x2="440" y2="380" stroke="#e2e8f0" stroke-width="1"/>
+</svg>

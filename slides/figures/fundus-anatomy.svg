@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 420" font-family="Malgun Gothic, Apple SD Gothic Neo, sans-serif">
+  <rect width="660" height="420" fill="#ffffff"/>
+  <defs>
+    <radialGradient id="retina" cx="45%" cy="45%" r="70%">
+      <stop offset="0%" stop-color="#f0b463"/>
+      <stop offset="100%" stop-color="#d98f38"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="320" cy="212" r="185" fill="url(#retina)" stroke="#b3742a" stroke-width="2"/>
+
+  <!-- vessels from disc -->
+  <g fill="none" stroke="#8c2f2f" stroke-linecap="round">
+    <path d="M205 205 C 260 175, 340 165, 470 150" stroke-width="4.5"/>
+    <path d="M205 205 C 270 235, 350 250, 480 250" stroke-width="4.5"/>
+    <path d="M205 205 C 230 165, 250 130, 300 95" stroke-width="3.6"/>
+    <path d="M205 205 C 230 250, 255 290, 305 330" stroke-width="3.6"/>
+    <path d="M205 205 C 180 165, 150 140, 120 120" stroke-width="3"/>
+    <path d="M205 205 C 185 250, 165 285, 140 320" stroke-width="3"/>
+  </g>
+  <g fill="none" stroke="#b5453f" stroke-linecap="round" opacity="0.85">
+    <path d="M205 205 C 265 185, 345 178, 465 168" stroke-width="3"/>
+    <path d="M205 205 C 275 240, 355 258, 470 262" stroke-width="3"/>
+  </g>
+
+  <!-- optic disc -->
+  <ellipse cx="205" cy="205" rx="37" ry="45" fill="#f2d79b" stroke="#b3742a" stroke-width="2"/>
+  <ellipse cx="205" cy="205" rx="15" ry="19" fill="#f8edc8" stroke="#b3742a" stroke-width="1.5"/>
+
+  <!-- macula + fovea -->
+  <circle cx="400" cy="238" r="46" fill="#cf7f33" opacity="0.9"/>
+  <circle cx="400" cy="238" r="9" fill="#7d3f0e"/>
+
+  <!-- labels -->
+  <g stroke="#334" stroke-width="1.2" fill="none">
+    <path d="M205 160 L205 70 L120 70"/>
+    <path d="M400 192 L400 60 L520 60"/>
+    <path d="M400 247 L560 247 L560 300"/>
+    <path d="M470 150 L600 120 L600 175"/>
+    <path d="M205 250 L120 300 L120 350"/>
+  </g>
+  <g font-size="15" fill="#22303f">
+    <text x="30" y="64" font-weight="bold">시신경유두 (Disc)</text>
+    <text x="30" y="82" font-size="12.5" fill="#5b6b82">혈관이 모이는 곳, C/D로 녹내장 평가</text>
+    <text x="500" y="54" font-weight="bold" text-anchor="start">황반 (Macula)</text>
+    <text x="500" y="72" font-size="12.5" fill="#5b6b82" text-anchor="start">시력 담당, 주변보다 어둡게</text>
+    <text x="566" y="243" font-weight="bold">중심와 (Fovea)</text>
+    <text x="566" y="261" font-size="12.5" fill="#5b6b82">무혈관, 가장 어두운 점</text>
+    <text x="606" y="116" font-weight="bold">혈관 (Vessels)</text>
+    <text x="606" y="134" font-size="12.5" fill="#5b6b82">A/V ratio로 평가</text>
+    <text x="30" y="300" font-weight="bold">배경망막</text>
+    <text x="30" y="318" font-size="12.5" fill="#5b6b82">균일한 주황색</text>
+  </g>
+</svg>
